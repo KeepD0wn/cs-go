@@ -1,0 +1,5 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ILCSharedAssemblySDKRootx86>$(MSBuildThisFileDirectory)..\tools\SharedLibrary</ILCSharedAssemblySDKRootx86>
+  </PropertyGroup>
+</Project>

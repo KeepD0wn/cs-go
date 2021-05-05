@@ -1,0 +1,10 @@
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Debug\SteamGuardCode.exe.config
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Debug\SteamGuardCode.exe
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Debug\SteamGuardCode.pdb
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\obj\Debug\SteamGuardCode.csprojAssemblyReference.cache
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\obj\Debug\SteamGuardCode.csproj.CoreCompileInputs.cache
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\obj\Debug\SteamGuardCode.csproj.CopyComplete
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\obj\Debug\SteamGuardCode.exe
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\obj\Debug\SteamGuardCode.pdb
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Debug\System.Diagnostics.DiagnosticSource.xml
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\obj\Debug\SteamGuardCode.csproj.Fody.CopyLocal.cache

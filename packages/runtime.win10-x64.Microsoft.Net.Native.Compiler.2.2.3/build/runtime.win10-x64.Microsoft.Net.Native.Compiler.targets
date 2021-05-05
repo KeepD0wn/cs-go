@@ -1,0 +1,11 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <AppxPackageRegistration
+        Include="$(MSBuildThisFileDirectory)..\tools\Runtime\x64\Microsoft.NET.Native.Runtime.2.2.appx"
+        Condition="'$(ProjectNProfileEnabled)' == 'true' and '$(UseDotNetNativeToolchain)' == 'true'">
+      <Architecture>x64</Architecture>
+      <Version>2.2.27328.0</Version>
+      <Publisher>'CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US'</Publisher>
+    </AppxPackageRegistration>
+  </ItemGroup>
+</Project>
