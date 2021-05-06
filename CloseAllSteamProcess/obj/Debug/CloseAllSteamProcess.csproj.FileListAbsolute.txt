@@ -7,3 +7,4 @@ C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\obj\Debug\CloseAllS
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\obj\Debug\CloseAllSteamProcess.csproj.CopyComplete
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\obj\Debug\CloseAllSteamProcess.exe
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\obj\Debug\CloseAllSteamProcess.pdb
+C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\obj\Debug\CloseAllSteamProcess.csprojAssemblyReference.cache

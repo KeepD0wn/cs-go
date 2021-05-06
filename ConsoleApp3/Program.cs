@@ -273,7 +273,7 @@ namespace ConsoleApp3
             //Console.WriteLine(task.Result);
             //Console.WriteLine("da");
 
-            SetOnlineZero();
+            
 
             //  var file = GetResourceStream(resName);
 
