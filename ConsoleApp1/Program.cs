@@ -634,10 +634,11 @@ namespace ConsoleApp1
 		{
 			Console.Title = "CSGO_IDLE_MACHINE";
 			IntPtr conWindow = FindWindow(null, "CSGO_IDLE_MACHINE");
+			Thread.Sleep(100);
 			SetWindowPos(conWindow, IntPtr.Zero, 1920 - consoleX, 1080 - consoleY - 40, consoleX, consoleY, SWP_NOZORDER);
 			SetForegroundWindow(conWindow);
 
-			if (File.Exists($@"{AppDomain.CurrentDomain.BaseDirectory}\License.lic"))
+			if (File.Exists($@"{AppDomain.CurrentDomain.BaseDirectory}\License.lic")) 
 			{
                 string key = "";
                 using (StreamReader sr = new StreamReader($@"{AppDomain.CurrentDomain.BaseDirectory}\License.lic"))
@@ -651,16 +652,16 @@ namespace ConsoleApp1
 					Console.WriteLine("[SYSTEM] License confirmed");
 
 					SetOnlineZero();
-					if (File.Exists($@"{AppDomain.CurrentDomain.BaseDirectory}\connection.txt"))
+					if (File.Exists($@"{AppDomain.CurrentDomain.BaseDirectory}\connection.txt")) 
 					{
-						string connStr = "";
-						using (StreamReader sr = new StreamReader($@"{AppDomain.CurrentDomain.BaseDirectory}\connection.txt"))
-						{
-							connStr = sr.ReadToEnd();
-						}
-						connStr = connStr.Replace("\r\n", "");
+						string connStr = "1";
+                        using (StreamReader sr = new StreamReader($@"{AppDomain.CurrentDomain.BaseDirectory}\connection.txt"))
+                        {
+                            connStr = sr.ReadToEnd();
+                        }
+                        connStr = connStr.Replace("\r\n", "");
 
-						if (connStr != "")
+                        if (connStr != "")
 						{
 							serverConnection = connStr;
 							Console.OutputEncoding = Encoding.UTF8;
@@ -685,7 +686,8 @@ namespace ConsoleApp1
                                     Thread myThread = new Thread(new ThreadStart(StartCsGo));
                                     myThread.Start();
                                     myThread.Join();
-                                }								
+                                }
+								Console.WriteLine("[SYSTEM] New cycle");
 								Thread.Sleep(timeIdle+120000); //+2минуты на всё про всё
 								Console.ForegroundColor = ConsoleColor.Red; // устанавливаем цвет								
 								Console.WriteLine("[SYSTEM] New cycle");

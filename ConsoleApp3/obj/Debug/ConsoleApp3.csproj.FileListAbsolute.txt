@@ -21,3 +21,4 @@ C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp3\bin\Debug\System.Buffers.xml
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp3\bin\Debug\System.Memory.xml
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp3\bin\Debug\System.Numerics.Vectors.xml
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp3\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp3\obj\Debug\ConsoleApp3.exe.config

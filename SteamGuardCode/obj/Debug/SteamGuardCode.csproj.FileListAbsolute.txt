@@ -7,4 +7,7 @@ C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\obj\Debug\SteamGuardCode.
 C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\obj\Debug\SteamGuardCode.exe
 C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\obj\Debug\SteamGuardCode.pdb
 C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Debug\System.Diagnostics.DiagnosticSource.xml
-C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\obj\Debug\SteamGuardCode.csproj.Fody.CopyLocal.cache
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Debug\SteamAuth.dll
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Debug\System.Diagnostics.DiagnosticSource.dll
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Debug\Newtonsoft.Json.dll
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Debug\SteamAuth.pdb

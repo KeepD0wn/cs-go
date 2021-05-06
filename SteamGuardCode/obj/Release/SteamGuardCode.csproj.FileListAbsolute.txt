@@ -1,2 +1,13 @@
 C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\obj\Release\SteamGuardCode.csprojAssemblyReference.cache
 C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\obj\Release\SteamGuardCode.csproj.CoreCompileInputs.cache
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Release\SteamGuardCode.exe.config
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Release\SteamGuardCode.exe
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Release\SteamGuardCode.pdb
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Release\SteamAuth.dll
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Release\System.Diagnostics.DiagnosticSource.dll
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Release\Newtonsoft.Json.dll
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Release\SteamAuth.pdb
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Release\System.Diagnostics.DiagnosticSource.xml
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\obj\Release\SteamGuardCode.csproj.CopyComplete
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\obj\Release\SteamGuardCode.exe
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\obj\Release\SteamGuardCode.pdb

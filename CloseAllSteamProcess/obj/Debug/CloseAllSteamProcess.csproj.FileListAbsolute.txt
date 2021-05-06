@@ -3,8 +3,7 @@ C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Debug\CloseAllS
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Debug\CloseAllSteamProcess.pdb
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Debug\System.Diagnostics.DiagnosticSource.xml
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\obj\Debug\CloseAllSteamProcess.csproj.CoreCompileInputs.cache
-C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\obj\Debug\CloseAllSteamProcess.csproj.Fody.CopyLocal.cache
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\obj\Debug\CloseAllSteamProcess.csproj.CopyComplete
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\obj\Debug\CloseAllSteamProcess.exe
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\obj\Debug\CloseAllSteamProcess.pdb
-C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\obj\Debug\CloseAllSteamProcess.csprojAssemblyReference.cache
+C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Debug\System.Diagnostics.DiagnosticSource.dll
