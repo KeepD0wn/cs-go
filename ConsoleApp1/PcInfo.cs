@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management;
@@ -20,11 +21,7 @@ namespace ConsoleApp1
 
                 String host = System.Net.Dns.GetHostName();
                 System.Net.IPAddress ip = System.Net.Dns.GetHostByName(host).AddressList[0];
-                string ipAdress = ip.ToString();
-                final += ipAdress;
-
-                string userName = Environment.UserName;
-                final += userName;
+                final+= Registry.GetValue("HKEY_LOCAL_MACHINE\\HARDWARE\\DESCRIPTION\\System\\BIOS", "BaseBoardProduct", 0).ToString();
 
                 string for2videocards = "";
                 ManagementObjectSearcher searcher11 = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController");

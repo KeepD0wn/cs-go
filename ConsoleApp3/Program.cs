@@ -18,6 +18,7 @@ using MySql.Data.MySqlClient;
 using System.Timers;
 using System.Management;
 using Rijndael256;
+using Microsoft.Win32;
 
 namespace ConsoleApp3
 {
@@ -338,7 +339,14 @@ namespace ConsoleApp3
 
             //task.Wait();
             //Console.WriteLine(task.Result);
-            //Console.WriteLine("da");               
+            //Console.WriteLine("da");           
+
+
+            //Get motherboard's serial number 
+            string mbInfo = String.Empty;
+           
+            mbInfo = Registry.GetValue("HKEY_LOCAL_MACHINE\\HARDWARE\\DESCRIPTION\\System\\BIOS", "BaseBoardProduct", 0).ToString();
+            Console.WriteLine(mbInfo);
 
             //--------------------------------------------------------------------------------------------------------------ТУТ находим процесс перед килом
             //IntPtr cs = FindWindow(null, "csgo_gmyemqllylxr");
