@@ -590,13 +590,11 @@ namespace ConsoleApp1
 					}
 
 					IntPtr console = FindWindow(null, "CSGO_IDLE_MACHINE");
-					//IntPtr testGuard = FindWindow(null, $"guard_{login}");
 					codeGuardTask.Wait();
 					Console.WriteLine($"Guard code: {codeGuardTask.Result}");
-					//guardDetected1==true
 					if (guardDetected1 == true && steamGuardWindow.ToString() != "0")
 					{
-						Thread.Sleep(1000);
+						Thread.Sleep(3000); //с 1 секунды до 3 сек что бы на высоких кол-вах не захлёбывался
 						lock (threadLockType)
 						{
 							TypeText(console, steamGuardWindow, codeGuardTask.Result);
