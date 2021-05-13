@@ -15,6 +15,9 @@ using System.IO;
 using System.Resources;
 using System.Reflection;
 using MySql.Data.MySqlClient;
+using System.Timers;
+using System.Management;
+using Rijndael256;
 
 namespace ConsoleApp3
 {
@@ -263,21 +266,69 @@ namespace ConsoleApp3
             }            
         }
 
-        public static string EncodeDecrypt(string str, ushort secretKey)
+        private static string GetHiddenConsoleInput()
         {
-            var ch = str.ToArray(); //преобразуем строку в символы
-            string newStr = "";      //переменная которая будет содержать зашифрованную строку
-            foreach (var c in ch)  //выбираем каждый элемент из массива символов нашей строки
-                newStr += TopSecret(c, secretKey);  //производим шифрование каждого отдельного элемента и сохраняем его в строку
-            return newStr;
+            StringBuilder input = new StringBuilder();
+            while (true)
+            {
+                var key = Console.ReadKey(true);
+                if (key.Key == ConsoleKey.Enter) break;
+                if (key.Key == ConsoleKey.Backspace && input.Length > 0) input.Remove(input.Length - 1, 1);
+                else if (key.Key != ConsoleKey.Backspace) input.Append(key.KeyChar);
+            }
+            return input.ToString();
         }
 
-        public static char TopSecret(char character, ushort secretKey)
+        [DllImport("User32.dll")]
+        static extern IntPtr GetDC(IntPtr hwnd);       
+
+        [DllImport("gdi32.dll")]
+        static extern int GetDeviceCaps(IntPtr hdc, int nIndex);
+
+        private static string GetPassword()
         {
-            character = (char)(character ^ secretKey); //Производим XOR операцию
-            return character;
+            StringBuilder input = new StringBuilder();
+            while (true)
+            {
+                int x = Console.CursorLeft;
+                int y = Console.CursorTop;
+                ConsoleKeyInfo key = Console.ReadKey(true);
+                if (key.Key == ConsoleKey.Enter)
+                {
+                    Console.WriteLine();
+                    break;
+                }
+                if (key.Key == ConsoleKey.Backspace && input.Length > 0)
+                {
+                    input.Remove(input.Length - 1, 1);
+                    Console.SetCursorPosition(x - 1, y);
+                    Console.Write(" ");
+                    Console.SetCursorPosition(x - 1, y);
+                }
+                else if (key.Key != ConsoleKey.Backspace)
+                {
+                    input.Append(key.KeyChar);
+                    Console.Write("*");
+                }
+            }
+            return input.ToString();
         }
 
+        static int i = 10;
+        static System.Timers.Timer tmr = new System.Timers.Timer();
+        static int timerDelay = 1;
+
+        private static void TmrEvent(object sender, ElapsedEventArgs e)
+        {
+            i -= timerDelay;
+            Console.SetCursorPosition(0, Console.CursorTop);
+            Console.Write("Wait " + i);
+            Console.SetCursorPosition(0, Console.CursorTop);
+            if (i <= 0)
+            {
+                tmr.Enabled = false;
+            }
+        }
 
         static void Main(string[] args)
         {
@@ -287,18 +338,26 @@ namespace ConsoleApp3
 
             //task.Wait();
             //Console.WriteLine(task.Result);
-            //Console.WriteLine("da");
+            //Console.WriteLine("da");               
 
-            ushort secretKey = 0x0088; // Секретный ключ (длина - 16 bit).
+            //--------------------------------------------------------------------------------------------------------------ТУТ находим процесс перед килом
+            //IntPtr cs = FindWindow(null, "csgo_gmyemqllylxr");
+            //int steamProcId = 0;
+            //GetWindowThreadProcessId(cs, ref steamProcId);
+            //Process steamProc = Process.GetProcessById(steamProcId);
+
+            //var selectedTeams = from t in Process.GetProcesses() // определяем каждый объект из teams как t
+            //                    where t.ProcessName.Contains("csgo") //фильтрация по критерию
+            //                    select t; // выбираем объект
+            //                              // where t.MainWindowTitle.Contains("csgo_gmyemqllylxr")
 
 
-            string str = "Hello World"; //это строка которую мы зашифруем
+            //var processExists = Process.GetProcesses().Any(p => p.ProcessName.Contains("csgo"));
 
-            str = EncodeDecrypt(str, secretKey); //производим шифрование
-            Console.WriteLine(str);  //выводим в консоль зашифрованную строку
+            //DateTime waitFor = DateTime.Now.AddSeconds(50);
+            //DateTime now = DateTime.Now;
+            //--------------------------------------------------------------------------------------------------------------
 
-            str = EncodeDecrypt(str, secretKey); //производим рассшифровку 
-            Console.WriteLine(str);             //выводим в консоль расшифрованную строку
 
 
             //  var file = GetResourceStream(resName);

@@ -13,6 +13,7 @@ namespace CloseAllSteamProcess
     {
         static void Main(string[] args)
         {
+            Console.Title = "Close All Steam Process";
             try
             {
                 if (File.Exists($@"{AppDomain.CurrentDomain.BaseDirectory}\License.lic"))

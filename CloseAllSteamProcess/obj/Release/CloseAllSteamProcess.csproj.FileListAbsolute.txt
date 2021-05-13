@@ -7,4 +7,3 @@ C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\obj\Release\CloseAl
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\obj\Release\CloseAllSteamProcess.exe
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\obj\Release\CloseAllSteamProcess.pdb
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Release\System.Diagnostics.DiagnosticSource.dll
-C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\obj\Release\CloseAllSteamProcess.csprojAssemblyReference.cache

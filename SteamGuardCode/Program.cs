@@ -13,6 +13,7 @@ namespace SteamGuardCode
     {
         static void Main(string[] args)
         {
+            Console.Title = "Steam Guard Code";
             try
             {
                 if (File.Exists($@"{AppDomain.CurrentDomain.BaseDirectory}\License.lic"))

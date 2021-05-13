@@ -41,6 +41,18 @@ namespace ConsoleApp1
                     final += queryObj["NumberOfCores"];
                     final += queryObj["ProcessorId"];
                 }
+
+                ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_DiskDrive");
+                foreach (ManagementObject info in searcher.Get())
+                {
+                    if (info["DeviceID"].ToString().Contains("PHYSICALDRIVE0"))
+                    {
+                        final += info["Model"];
+                        final += info["InterfaceType"];
+                        final += info["SerialNumber"];
+                    }
+                }
+
                 final = final.Replace(" ", "").Replace("-", "").ToLower();
                 MD5 md5 = new MD5CryptoServiceProvider();
                 byte[] checkSum = md5.ComputeHash(Encoding.UTF8.GetBytes(final));
