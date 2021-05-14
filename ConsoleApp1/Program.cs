@@ -202,7 +202,9 @@ namespace ConsoleApp1
 		{
 			minToNewCycle -= timerDelayInMins;
 			Console.SetCursorPosition(0, Console.CursorTop);
-			Console.Write($"{minToNewCycle} minutes" + "     "); //пробелы что бы инфа от старой строки не осталось
+			Console.ForegroundColor = ConsoleColor.Yellow; // устанавливаем цвет	
+			Console.Write($"[SYSTEM] New cycle after: {minToNewCycle} minutes" +"          "); //пробелы что бы инфа от старой строки не осталось
+			Console.ResetColor(); // сбрасываем в стандартный
 			Console.SetCursorPosition(0, Console.CursorTop);
 			if (minToNewCycle <= 1)
 			{
@@ -707,6 +709,7 @@ namespace ConsoleApp1
 							Console.OutputEncoding = Encoding.UTF8;
 							Console.WriteLine("Write the number of windows csgo: ");
 							int count = Convert.ToInt32(Console.ReadLine());
+							int cycleCount = 0;
                             while (true) 
                             {
         //                        while (processStarted < count) //'ЭТА ВЕРСИЯ ДЛЯ ПОДДЕРЖАНИЯ ВСЕГДА N ПОТОКОВ и норм размещения окон
@@ -727,15 +730,18 @@ namespace ConsoleApp1
 									myThread.Start();
                                     myThread.Join();
                                 }
-								Console.WriteLine($"[SYSTEM] New cycle after:");
+								cycleCount += 1;
+								Console.WriteLine($"[SYSTEM] Current cycle №{cycleCount}");
 								tmr.Interval = timerDelayInSeconds;
 								tmr.Enabled = true;
 								tmr.Elapsed += TmrEvent;
 								
 								Thread.Sleep(timeIdle); 
-								Console.ForegroundColor = ConsoleColor.Red; // устанавливаем цвет								
+								Console.ForegroundColor = ConsoleColor.Green; // устанавливаем цвет								
 								Console.WriteLine("[SYSTEM] New cycle");
 								Console.ResetColor(); // сбрасываем в стандартный
+
+								minToNewCycle = timeIdle / 60000;
 								windowInARow = 0;
 								windowCount = 0;
 								xOffset = 0;
