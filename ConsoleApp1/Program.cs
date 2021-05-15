@@ -201,11 +201,12 @@ namespace ConsoleApp1
 		private static void TmrEvent(object sender, ElapsedEventArgs e)
 		{
 			minToNewCycle -= timerDelayInMins;
-			Console.SetCursorPosition(0, Console.CursorTop);
 			Console.ForegroundColor = ConsoleColor.Yellow; // устанавливаем цвет	
-			Console.Write($"[SYSTEM] New cycle after: {minToNewCycle} minutes" +"          "); //пробелы что бы инфа от старой строки не осталось
-			Console.ResetColor(); // сбрасываем в стандартный
 			Console.SetCursorPosition(0, Console.CursorTop);
+			Console.Write($"[SYSTEM] New cycle after: {minToNewCycle} minutes" +"   "); //пробелы что бы инфа от старой строки не осталось, но не слишком много, а то заедет некст строка		
+			Console.SetCursorPosition(0, Console.CursorTop);
+			Console.ResetColor(); // сбрасываем в стандартный
+
 			if (minToNewCycle <= 1)
 			{
 				tmr.Enabled = false;
@@ -292,7 +293,7 @@ namespace ConsoleApp1
 
 		private static void SetCsgoPos(IntPtr csgoWindow, int xOffset, int yOffset,string login)
 		{
-			SetWindowPos(csgoWindow, IntPtr.Zero, xOffset, yOffset, xSize, ySize,SWP_NOZORDER);
+			SetWindowPos(csgoWindow, IntPtr.Zero, xOffset, yOffset, xSize, ySize,SWP_NOSIZE | SWP_NOZORDER); //пусть сам выставляет свои 300 по высоте
 		}
 
 		private static async Task SetCsgoPosAsync(IntPtr csgoWindow, int xOffset1, int yOffset1, string login)
@@ -342,7 +343,7 @@ namespace ConsoleApp1
 
 		private static async Task TypeInCsgoAsync(Process steamProc, Process csgoProc, string login, int accid, IntPtr console)
 		{
-			await Task.Delay(60000);
+			await Task.Delay(90000);
 			Task t = Task.Run(() => TypeInCsgo(steamProc, login, accid, console));
             System.Timers.Timer timer = new System.Timers.Timer(timeIdle);
 			timer.Elapsed += (o, e) => KillCsSteam(steamProc, csgoProc, accid, login);
@@ -354,12 +355,22 @@ namespace ConsoleApp1
 		{
 			try
 			{
-				csgoProc.Kill();
-				listCsgo.Remove(csgoProc);
-				Thread.Sleep(2000);
-				steamProc.Kill();
-				//listSteam.Remove(steamProc);
-				Console.WriteLine($"[{login}] was killed");
+                try //на всякий в трай, без обработки
+                {
+					csgoProc.Kill();
+					//listCsgo.Remove(csgoProc);
+					Thread.Sleep(2000);
+				}
+                catch { }
+
+				try
+				{
+					steamProc.Kill();
+					//listSteam.Remove(steamProc);
+				}
+				catch { }
+				
+				//Console.WriteLine($"[{login}] was killed");
 				ChangeOnline(0, accid);
 				processStarted -= 1;
 
@@ -624,7 +635,7 @@ namespace ConsoleApp1
 							Console.WriteLine(new string('-', 20)+$"Current window: {currentCycle}/{lastCycle}");
 							GetWindowThreadProcessId(csgoWindow, ref csProcId);
 							csgoProc = Process.GetProcessById(csProcId);
-							listCsgo.Add(csgoProc);
+							//listCsgo.Add(csgoProc);
 							SetWindowText(csgoWindow, $"csgo_{login}"); //ждёт подгруза кски, занимает се кунд 10. Но если не ждать, то слишком быстро всё
 							SetCsgoPosAsync(csgoWindow, xOffset, yOffset,login);
 							break;
@@ -710,7 +721,10 @@ namespace ConsoleApp1
 							Console.WriteLine("Write the number of windows csgo: ");
 							int count = Convert.ToInt32(Console.ReadLine());
 							int cycleCount = 0;
-                            while (true) 
+							tmr.Interval = timerDelayInSeconds;
+							tmr.Elapsed += TmrEvent; //делаем за циклом что бы не стакались события
+
+							while (true) 
                             {
         //                        while (processStarted < count) //'ЭТА ВЕРСИЯ ДЛЯ ПОДДЕРЖАНИЯ ВСЕГДА N ПОТОКОВ и норм размещения окон
         //                        {
@@ -732,9 +746,7 @@ namespace ConsoleApp1
                                 }
 								cycleCount += 1;
 								Console.WriteLine($"[SYSTEM] Current cycle №{cycleCount}");
-								tmr.Interval = timerDelayInSeconds;
 								tmr.Enabled = true;
-								tmr.Elapsed += TmrEvent;
 								
 								Thread.Sleep(timeIdle); 
 								Console.ForegroundColor = ConsoleColor.Green; // устанавливаем цвет								

@@ -322,9 +322,11 @@ namespace ConsoleApp3
         private static void TmrEvent(object sender, ElapsedEventArgs e)
         {
             i -= timerDelay;
+            Console.ForegroundColor = ConsoleColor.Yellow; // устанавливаем цвет	
             Console.SetCursorPosition(0, Console.CursorTop);
-            Console.Write("Wait " + i);
+            Console.Write($"[SYSTEM] New cycle after: {i} minutes" + "   "); //пробелы что бы инфа от старой строки не осталось		
             Console.SetCursorPosition(0, Console.CursorTop);
+            Console.ResetColor(); // сбрасываем в стандартный
             if (i <= 0)
             {
                 tmr.Enabled = false;
@@ -340,8 +342,17 @@ namespace ConsoleApp3
             //task.Wait();
             //Console.WriteLine(task.Result);
             //Console.WriteLine("da");           
-          
-            
+            tmr.Interval = 1000;
+            tmr.Elapsed += TmrEvent;
+
+            while (true)
+            {
+                tmr.Enabled = true;
+
+                Thread.Sleep(15000);
+                i = 10;
+
+            }
 
             //--------------------------------------------------------------------------------------------------------------ТУТ находим процесс перед килом
             //IntPtr cs = FindWindow(null, "csgo_gmyemqllylxr");
