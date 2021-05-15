@@ -11,6 +11,7 @@ using System.Data.Common;
 using System.Threading.Tasks;
 using System.IO;
 using System.Collections.Generic;
+using System.Configuration;
 
 namespace ConsoleApp1
 {
@@ -201,7 +202,7 @@ namespace ConsoleApp1
 		private static void TmrEvent(object sender, ElapsedEventArgs e)
 		{
 			minToNewCycle -= timerDelayInMins;
-			Console.ForegroundColor = ConsoleColor.Yellow; // устанавливаем цвет	
+			Console.ForegroundColor = ConsoleColor.DarkGreen; // устанавливаем цвет	
 			Console.SetCursorPosition(0, Console.CursorTop);
 			Console.Write($"[SYSTEM] New cycle after: {minToNewCycle} minutes" +"   "); //пробелы что бы инфа от старой строки не осталось, но не слишком много, а то заедет некст строка		
 			Console.SetCursorPosition(0, Console.CursorTop);
@@ -316,7 +317,7 @@ namespace ConsoleApp1
 				IntPtr csgoWin = FindWindow(null, $"csgo_{login}");
 				if (csgoWin.ToString() != "0")
 				{					
-					SetForegroundWindow(csgoWin);
+					SetForegroundWindow(csgoWin); //включил в ласт версии, мб поможет
 					Thread.Sleep(500);
 					langToEn();
 					foreach (char ch in serverConnection)
@@ -713,7 +714,46 @@ namespace ConsoleApp1
                         }
                         connStr = connStr.Replace("\r\n", "");
 
-                        if (connStr != "")
+						MySqlConnection conn = new MySqlConnection();
+						try
+						{
+							ConnectionStringSettings settings = ConfigurationManager.ConnectionStrings["DefaultConnection"];
+							conn = new MySqlConnection(settings.ToString());
+							conn.Open();
+
+							var com = new MySqlCommand("USE `MySQL-1964`; " +
+							 "select * from `subs` where keyLic = @keyLic AND subEnd > NOW() AND activeLic = 1 limit 1", conn);
+							com.Parameters.AddWithValue("@keyLic", key);
+
+							using (DbDataReader reader = com.ExecuteReader())
+							{
+								if (reader.HasRows) //тут уходит на else если нет данных
+								{
+
+								}
+								else
+								{
+									conn.Close();
+									Console.WriteLine("[SYSTEM] License is not active");
+									Thread.Sleep(5000);
+									Environment.Exit(0);
+								}
+							}
+							conn.Close();
+						}
+						catch
+						{
+							conn.Close();
+							Console.WriteLine("[SYSTEM][404] Something went wrong!");
+							Thread.Sleep(5000);
+							Environment.Exit(0);
+						}
+						finally
+						{
+							conn.Close();
+						}
+
+						if (connStr != "")
 						{
 							serverConnection = connStr;
 							Console.OutputEncoding = Encoding.UTF8;
@@ -747,8 +787,9 @@ namespace ConsoleApp1
 								Console.WriteLine($"[SYSTEM] Current cycle №{cycleCount}");
 								tmr.Enabled = true;
 								
-								Thread.Sleep(timeIdle); 
-								Console.ForegroundColor = ConsoleColor.Green; // устанавливаем цвет								
+								Thread.Sleep(timeIdle+30000); //запас 30 сек
+								Console.ForegroundColor = ConsoleColor.Green; // устанавливаем цвет		
+								Console.WriteLine();
 								Console.WriteLine("[SYSTEM] New cycle");
 								Console.ResetColor(); // сбрасываем в стандартный
 
