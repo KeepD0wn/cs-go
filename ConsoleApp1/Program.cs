@@ -315,9 +315,8 @@ namespace ConsoleApp1
 			{
 				IntPtr csgoWin = FindWindow(null, $"csgo_{login}");
 				if (csgoWin.ToString() != "0")
-				{
-					//Thread.Sleep(50);
-					//SetForegroundWindow(csgoWin);
+				{					
+					SetForegroundWindow(csgoWin);
 					Thread.Sleep(500);
 					langToEn();
 					foreach (char ch in serverConnection)
