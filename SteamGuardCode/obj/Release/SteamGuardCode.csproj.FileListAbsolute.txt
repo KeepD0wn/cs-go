@@ -33,3 +33,5 @@ C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Release\System.Buffer
 C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Release\System.Memory.xml
 C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Release\System.Numerics.Vectors.xml
 C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Release\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\obj\Release\SteamGuardCode.Properties.Resources.resources
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\obj\Release\SteamGuardCode.csproj.GenerateResource.cache

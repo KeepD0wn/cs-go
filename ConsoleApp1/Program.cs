@@ -327,7 +327,7 @@ namespace ConsoleApp1
 					}
 					Thread.Sleep(500);
 					PostMessage(csgoWin, WM_KEYDOWN, VK_ENTER, 1);
-					Thread.Sleep(100);
+					Thread.Sleep(500);
 					SetForegroundWindow(console);
 				}
 				else
@@ -683,6 +683,47 @@ namespace ConsoleApp1
             }			
 		}
 
+		private static void CheckSub(string key)
+        {
+			MySqlConnection conn = new MySqlConnection();
+			try
+			{
+				conn = new MySqlConnection(Properties.Resources.String1);
+				conn.Open();
+
+				var com = new MySqlCommand("USE `MySQL-5846`; " +
+				 "select * from `subs` where keyLic = @keyLic AND subEnd > NOW() AND activeLic = 1 limit 1", conn);
+				com.Parameters.AddWithValue("@keyLic", key);
+
+				using (DbDataReader reader = com.ExecuteReader())
+				{
+					if (reader.HasRows) //тут уходит на else если нет данных
+					{
+
+					}
+					else
+					{
+						conn.Close();
+						Console.WriteLine("[SYSTEM] License is not active");
+						Thread.Sleep(5000);
+						Environment.Exit(0);
+					}
+				}
+				conn.Close();
+			}
+			catch
+			{
+				conn.Close();
+				Console.WriteLine("[SYSTEM][404] Something went wrong!");
+				Thread.Sleep(5000);
+				Environment.Exit(0);
+			}
+			finally
+			{
+				conn.Close();
+			}
+		}
+
 		static void Main(string[] args)
 		{
 			Console.Title = "CSGO_IDLE_MACHINE";
@@ -700,7 +741,9 @@ namespace ConsoleApp1
                 }
                 key = key.Replace("\r\n", "");
 
-                if (PcInfo.GetCurrentPCInfo() == key)
+				CheckSub(key);
+
+				if (PcInfo.GetCurrentPCInfo() == key)
 				{	
 					Console.WriteLine("[SYSTEM] License confirmed");
 
@@ -712,46 +755,7 @@ namespace ConsoleApp1
                         {
                             connStr = sr.ReadToEnd();
                         }
-                        connStr = connStr.Replace("\r\n", "");
-
-						MySqlConnection conn = new MySqlConnection();
-						try
-						{
-							ConnectionStringSettings settings = ConfigurationManager.ConnectionStrings["DefaultConnection"];
-							conn = new MySqlConnection(settings.ToString());
-							conn.Open();
-
-							var com = new MySqlCommand("USE `MySQL-1964`; " +
-							 "select * from `subs` where keyLic = @keyLic AND subEnd > NOW() AND activeLic = 1 limit 1", conn);
-							com.Parameters.AddWithValue("@keyLic", key);
-
-							using (DbDataReader reader = com.ExecuteReader())
-							{
-								if (reader.HasRows) //тут уходит на else если нет данных
-								{
-
-								}
-								else
-								{
-									conn.Close();
-									Console.WriteLine("[SYSTEM] License is not active");
-									Thread.Sleep(5000);
-									Environment.Exit(0);
-								}
-							}
-							conn.Close();
-						}
-						catch
-						{
-							conn.Close();
-							Console.WriteLine("[SYSTEM][404] Something went wrong!");
-							Thread.Sleep(5000);
-							Environment.Exit(0);
-						}
-						finally
-						{
-							conn.Close();
-						}
+                        connStr = connStr.Replace("\r\n", "");						
 
 						if (connStr != "")
 						{
@@ -765,8 +769,8 @@ namespace ConsoleApp1
 
 							while (true) 
                             {
-        //                        while (processStarted < count) //'ЭТА ВЕРСИЯ ДЛЯ ПОДДЕРЖАНИЯ ВСЕГДА N ПОТОКОВ и норм размещения окон
-        //                        {
+								//                        while (processStarted < count) //'ЭТА ВЕРСИЯ ДЛЯ ПОДДЕРЖАНИЯ ВСЕГДА N ПОТОКОВ и норм размещения окон
+								//                        {
 								//	//Task task = new Task(StartCsGo);
 								//	//// Запустить задачу
 
@@ -777,7 +781,9 @@ namespace ConsoleApp1
 								//	myThread.Join();
 								//}
 
-								for(int i = 0; i < count; i++)
+								CheckSub(key);
+
+								for (int i = 0; i < count; i++)
                                 {
 									Thread myThread = new Thread(delegate () { StartCsGo(i+1,count); }); //+1 на 1первом параметре, потому что люди считают с еденицы
 									myThread.Start();

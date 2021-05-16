@@ -29,3 +29,5 @@ C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Release\System.
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Release\System.Memory.xml
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Release\System.Numerics.Vectors.xml
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Release\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\obj\Release\CloseAllSteamProcess.Properties.Resources.resources
+C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\obj\Release\CloseAllSteamProcess.csproj.GenerateResource.cache

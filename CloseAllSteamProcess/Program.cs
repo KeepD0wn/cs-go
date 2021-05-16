@@ -33,11 +33,10 @@ namespace CloseAllSteamProcess
                     MySqlConnection conn = new MySqlConnection();
                     try
                     {
-                        ConnectionStringSettings settings = ConfigurationManager.ConnectionStrings["DefaultConnection"];
-                        conn = new MySqlConnection(settings.ToString());
+                        conn = new MySqlConnection(Properties.Resources.String1);
                         conn.Open();
 
-                        var com = new MySqlCommand("USE `MySQL-1964`; " +
+                        var com = new MySqlCommand("USE `MySQL-5846`; " +
                          "select * from `subs` where keyLic = @keyLic AND subEnd > NOW() AND activeLic = 1 limit 1", conn);
                         com.Parameters.AddWithValue("@keyLic", key);
 
