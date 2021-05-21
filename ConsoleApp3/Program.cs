@@ -78,6 +78,12 @@ namespace ConsoleApp3
         [DllImport("user32.dll", SetLastError = true)]
         static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
 
+        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+        public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint cButtons, uint dwExtraInfo);
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        static extern bool SetCursorPos(int x, int y);
+
 
 
         private const UInt32 WM_CLOSE = 0x0010;
@@ -319,18 +325,10 @@ namespace ConsoleApp3
         static System.Timers.Timer tmr = new System.Timers.Timer();
         static int timerDelay = 1;
 
-        private static void TmrEvent(object sender, ElapsedEventArgs e)
+        private static void TmrEvent2(ref bool k, System.Timers.Timer k2) //out сделать, ещё посмотреть как передаются параметры
         {
-            i -= timerDelay;
-            Console.ForegroundColor = ConsoleColor.Yellow; // устанавливаем цвет	
-            Console.SetCursorPosition(0, Console.CursorTop);
-            Console.Write($"[SYSTEM] New cycle after: {i} minutes" + "   "); //пробелы что бы инфа от старой строки не осталось		
-            Console.SetCursorPosition(0, Console.CursorTop);
-            Console.ResetColor(); // сбрасываем в стандартный
-            if (i <= 0)
-            {
-                tmr.Enabled = false;
-            }
+            k = false;
+            k2.Enabled = false;            
         }
 
         static void Main(string[] args)
@@ -341,24 +339,45 @@ namespace ConsoleApp3
 
             //task.Wait();
             //Console.WriteLine(task.Result);
-            //Console.WriteLine("da");           
-            tmr.Interval = 1000;
-            tmr.Elapsed += TmrEvent;
+            //Console.WriteLine("da"); 
 
-            while (true)
-            {
-                tmr.Enabled = true;
+            //uint MOUSEEVENTF_LEFTDOWN = 0x02;
+            //uint MOUSEEVENTF_LEFTUP = 0x04;
 
-                Thread.Sleep(15000);
-                i = 10;
+            //int x = 480;
+            //int y = 480;
+            //SetCursorPos(x, y);
 
-            }
+            //mouse_event(MOUSEEVENTF_LEFTDOWN, (uint)x, (uint)y, 0, 0);
+            //mouse_event(MOUSEEVENTF_LEFTUP, (uint)x, (uint)y, 0, 0);
+
+            //mouse_event(MOUSEEVENTF_LEFTDOWN, 1000, 1080, 0, 0);
+            //mouse_event(MOUSEEVENTF_LEFTUP, 1000, 1080, 0, 0);
+
+            Process[] remoteAll = Process.GetProcessesByName("csgo");
+            Console.WriteLine(remoteAll.Length);
+            //while ()
+            //{
+            //    Process process2 = new Process(); //КАК НИ СТРАННО, НО УБИЙСТВО ПЛЕШИВОГО СТИМА РАБОТАЕТ ТОЛЬКО ИЗ НОВОГО ПРОЦЕССА
+            //    ProcessStartInfo processStartInfo1 = new ProcessStartInfo();
+            //    processStartInfo1.WindowStyle = ProcessWindowStyle.Hidden;
+            //    processStartInfo1.FileName = "cmd.exe";
+            //    processStartInfo1.Arguments = string.Format("/C \"{0}\"", new object[]
+            //    {
+            //                     $@"C:\Users\kdgjg\Desktop\Steam.exe"
+            //    }); ;
+            //    process2.StartInfo = processStartInfo1;
+            //    process2.Start();
+            //}
+
+
 
             //--------------------------------------------------------------------------------------------------------------ТУТ находим процесс перед килом
-            //IntPtr cs = FindWindow(null, "csgo_gmyemqllylxr");
+            //IntPtr cs = FindWindow(null, "Counter-Strike: Global Offensive");
             //int steamProcId = 0;
             //GetWindowThreadProcessId(cs, ref steamProcId);
             //Process steamProc = Process.GetProcessById(steamProcId);
+            //steamProc.Kill();
 
             //var selectedTeams = from t in Process.GetProcesses() // определяем каждый объект из teams как t
             //                    where t.ProcessName.Contains("csgo") //фильтрация по критерию
@@ -366,7 +385,11 @@ namespace ConsoleApp3
             //                              // where t.MainWindowTitle.Contains("csgo_gmyemqllylxr")
 
 
-            //var processExists = Process.GetProcesses().Any(p => p.ProcessName.Contains("csgo"));
+            //Process[] localByName = Process.GetProcessesByName("csgo");
+            //foreach (var t in localByName)
+            //{
+            //    t.Kill();
+            //}
 
             //DateTime waitFor = DateTime.Now.AddSeconds(50);
             //DateTime now = DateTime.Now;

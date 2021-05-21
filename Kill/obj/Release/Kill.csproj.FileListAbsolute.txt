@@ -1,0 +1,6 @@
+C:\Users\gvozd\source\repos\ConsoleApp1\Kill\bin\Release\Kill.exe.config
+C:\Users\gvozd\source\repos\ConsoleApp1\Kill\bin\Release\Kill.exe
+C:\Users\gvozd\source\repos\ConsoleApp1\Kill\bin\Release\Kill.pdb
+C:\Users\gvozd\source\repos\ConsoleApp1\Kill\obj\Release\Kill.csproj.CoreCompileInputs.cache
+C:\Users\gvozd\source\repos\ConsoleApp1\Kill\obj\Release\Kill.exe
+C:\Users\gvozd\source\repos\ConsoleApp1\Kill\obj\Release\Kill.pdb
