@@ -147,7 +147,7 @@ namespace ConsoleApp1
 
 		const uint SWP_NOSIZE = 0x0001;
 
-		private static object threadLock = new object();
+		private static object mainObj = new object();
 
 		private static object threadLockType = new object();
 
@@ -171,7 +171,7 @@ namespace ConsoleApp1
 
 		private static List<Process> listSteam = new List<Process>();
 
-		private static int timeIdle = 300000; //205 минут 12300000;
+		private static int timeIdle = 12300000; //205 минут 12300000;
 
 		private static int consoleX = 380;
 		
@@ -508,7 +508,7 @@ namespace ConsoleApp1
 
 			try
 			{
-				lock (threadLock)
+				lock (mainObj)
 				{
 					//записываем данные в переменные
 					try
@@ -616,25 +616,27 @@ namespace ConsoleApp1
 					}
 
 					//CloseSteamPlesh();
-					if (FindWindow(null, "Steam Login").ToString() != "0")
+					Thread.Sleep(1000); //если не делать делей, то киляется ещё прошлая кска
+					if (FindWindow(null, $"steam_{login}").ToString() == "0")
 					{
-						Console.WriteLine("[777][SYSTEM] Steam Error");
-						Thread.Sleep(20000);
+						Console.WriteLine("[777][SYSTEM] Wait a little"); 
+						Thread.Sleep(10000);
 
-						Process process2 = new Process(); //КАК НИ СТРАННО, НО УБИЙСТВО ПЛЕШИВОГО СТИМА РАБОТАЕТ ТОЛЬКО ИЗ НОВОГО ПРОЦЕССА
-						ProcessStartInfo processStartInfo1 = new ProcessStartInfo();
-						processStartInfo1.WindowStyle = ProcessWindowStyle.Hidden;
-						processStartInfo1.FileName = "cmd.exe";
-						processStartInfo1.Arguments = string.Format("/C \"{0}\"", new object[]
-						{
-								 $@"{AppDomain.CurrentDomain.BaseDirectory}\kill.exe"
-						});;
-						process2.StartInfo = processStartInfo1;
-						process2.Start();
-						process2.WaitForExit(3000);
+						//УБИЙСТВО НЕ ОЧЕНЬ ИДЕЯ, ИХ СТАНОВИТСЯ ВСЁ БОЛЬЩЕ
+                        //Process process2 = new Process(); //КАК НИ СТРАННО, НО УБИЙСТВО ПЛЕШИВОГО СТИМА РАБОТАЕТ ТОЛЬКО ИЗ НОВОГО ПРОЦЕССА
+                        //ProcessStartInfo processStartInfo1 = new ProcessStartInfo();
+                        //processStartInfo1.WindowStyle = ProcessWindowStyle.Hidden;
+                        //processStartInfo1.FileName = "cmd.exe";
+                        //processStartInfo1.Arguments = string.Format("/C \"{0}\"", new object[]
+                        //{
+                        //         $@"{AppDomain.CurrentDomain.BaseDirectory}\kill.exe"
+                        //}); ;
+                        //process2.StartInfo = processStartInfo1;
+                        //process2.Start();
+                        //process2.WaitForExit(3000);
 
-						throw new Exception("Abort");
-					}
+                        //throw new Exception("Abort");
+                    }
 
 					bool guardDetected1 = false;
 					var codeGuardTask = GetGuardCodeAsync(secretKey);
@@ -684,7 +686,7 @@ namespace ConsoleApp1
 
 					bool timeIsOver = false;
 					System.Timers.Timer tmr2 = new System.Timers.Timer();
-                    tmr2.Interval = 1000*60;
+                    tmr2.Interval = 1000*80;
                     tmr2.Elapsed += (o, e) => CheckTime(ref timeIsOver, tmr2);
 					tmr2.Enabled = true;
 
@@ -852,19 +854,12 @@ namespace ConsoleApp1
                                 int i = 0;
 								while (Process.GetProcessesByName("csgo").Length < count) //processStarted < count // 'ЭТА ВЕРСИЯ ДЛЯ ПОДДЕРЖАНИЯ ВСЕГДА N ПОТОКОВ и норм размещения окон
 								{
-									Thread myThread = new Thread(delegate () { StartCsGo(i + 1, count); });
+									Thread myThread = new Thread(delegate () { StartCsGo(Process.GetProcessesByName("csgo").Length+1, count); });
                                     myThread.Start();
                                     myThread.Join();
                                     i += 1;
                                 }
-
-        //                        CheckSubscribe(key);
-								//for (int i = 0; i < count; i++)
-        //                        {
-								//	Thread myThread = new Thread(delegate () { StartCsGo(i+1,count); }); //+1 на 1первом параметре, потому что люди считают с еденицы
-								//	myThread.Start();
-        //                            myThread.Join();
-        //                        }
+       
 								cycleCount += 1;
 								Console.WriteLine($"[SYSTEM] Current cycle №{cycleCount}");
 								tmr.Enabled = true;
@@ -872,6 +867,8 @@ namespace ConsoleApp1
 								Console.ForegroundColor = ConsoleColor.DarkGreen;
 								Console.Write($"[SYSTEM] New cycle after: {minToNewCycle} minutes" + "   "); //что бы показывало время сразу, а не через минуту
 								Console.ResetColor();
+
+								//тут асинхронность, которая открывает кс если что
 
 								Thread.Sleep(timeIdle); //запас уже 5 минут
 								Console.ForegroundColor = ConsoleColor.Green; // устанавливаем цвет		
