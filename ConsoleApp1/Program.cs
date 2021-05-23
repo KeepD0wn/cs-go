@@ -194,9 +194,7 @@ namespace ConsoleApp1
 		{
 			minToNewCycle -= timerDelayInMins;
 			Console.ForegroundColor = ConsoleColor.DarkGreen; // устанавливаем цвет	
-			Console.SetCursorPosition(0, Console.CursorTop);
-			Console.Write($"[SYSTEM] New cycle after: {minToNewCycle} minutes" +"   "); //пробелы что бы инфа от старой строки не осталось, но не слишком много, а то заедет некст строка		
-			Console.SetCursorPosition(0, Console.CursorTop);
+			Console.WriteLine($"[SYSTEM] New cycle after: {minToNewCycle} minutes" +"   "); //пробелы что бы инфа от старой строки не осталось, но не слишком много, а то заедет некст строка		
 			Console.ResetColor(); // сбрасываем в стандартный
 
 			if (minToNewCycle <= 1)
@@ -861,6 +859,28 @@ namespace ConsoleApp1
 			}
 		}
 
+		private static void Start(int count)
+		{
+			int i = 0;
+			listSteamLogin.Add("0"); //иногда ловил нолики при закрытии на всякий вставляю
+			while (true)
+            {				
+				while (Process.GetProcessesByName("csgo").Length < count) //processStarted < count // 'ЭТА ВЕРСИЯ ДЛЯ ПОДДЕРЖАНИЯ ВСЕГДА N ПОТОКОВ и норм размещения окон
+				{
+					Thread myThread = new Thread(delegate () { StartCsGo(Process.GetProcessesByName("csgo").Length + 1, count); });
+					myThread.Start();
+					myThread.Join();
+					i += 1;
+				}
+				Thread.Sleep(1000);
+			}
+		}
+
+		private static async Task StartAsync(int count)
+		{
+			await Task.Run(() => Start(count));
+		}
+
 		static void Main(string[] args)
 		{
 			Console.Title = "CSGO_IDLE_MACHINE";
@@ -870,7 +890,7 @@ namespace ConsoleApp1
 			SetForegroundWindow(conWindow);
 
 			Console.ForegroundColor = ConsoleColor.Red;
-			Console.WriteLine("IDLE MACHINE v1.5");
+			Console.WriteLine("IDLE MACHINE v1.6");
 			Console.WriteLine("discord.gg/nRrrpqhRtg");
 			Console.ResetColor();
 
@@ -908,31 +928,39 @@ namespace ConsoleApp1
 							int cycleCount = 0;
 							tmr.Interval = timerDelayInSeconds;
 							tmr.Elapsed += TmrEvent; //делаем за циклом что бы не стакались события
+							bool hasStarted = false;
 
 							while (true) 
                             {
                                 CheckSubscribe(key);
-                                int i = 0;
-								listSteamLogin.Add("0"); //иногда ловил нолики при закрытии на всякий вставляю
-								while (Process.GetProcessesByName("csgo").Length < count) //processStarted < count // 'ЭТА ВЕРСИЯ ДЛЯ ПОДДЕРЖАНИЯ ВСЕГДА N ПОТОКОВ и норм размещения окон
-								{
-									Thread myThread = new Thread(delegate () { StartCsGo(Process.GetProcessesByName("csgo").Length+1, count); });
-                                    myThread.Start();
-                                    myThread.Join();
-                                    i += 1;
-                                }
-       
-								cycleCount += 1;
+                                if (hasStarted == false)
+                                {
+									StartAsync(count);
+									hasStarted = true;
+								}
+
+								
+                                //int i = 0;
+                                //listSteamLogin.Add("0"); //иногда ловил нолики при закрытии на всякий вставляю
+                                //while (Process.GetProcessesByName("csgo").Length < count) //processStarted < count // 'ЭТА ВЕРСИЯ ДЛЯ ПОДДЕРЖАНИЯ ВСЕГДА N ПОТОКОВ и норм размещения окон
+                                //{
+                                //    Thread myThread = new Thread(delegate () { StartCsGo(Process.GetProcessesByName("csgo").Length + 1, count); });
+                                //    myThread.Start();
+                                //    myThread.Join();
+                                //    i += 1;
+                                //}
+
+                                cycleCount += 1;
 								Console.WriteLine($"[SYSTEM] Current cycle №{cycleCount}");
 								tmr.Enabled = true;
 
 								Console.ForegroundColor = ConsoleColor.DarkGreen;
-								Console.Write($"[SYSTEM] New cycle after: {minToNewCycle} minutes" + "   "); //что бы показывало время сразу, а не через минуту
+								Console.WriteLine($"[SYSTEM] New cycle after: {minToNewCycle} minutes" + "   "); //что бы показывало время сразу, а не через минуту
 								Console.ResetColor();
 
 								//тут асинхронность, которая открывает кс если что
 
-								Thread.Sleep(timeIdle); //запас уже 5 минут
+								Thread.Sleep(timeIdle+90000); //запас уже 5 минут
 								Console.ForegroundColor = ConsoleColor.Green; // устанавливаем цвет		
 								Console.WriteLine();
 								Console.WriteLine("[SYSTEM] New cycle");
