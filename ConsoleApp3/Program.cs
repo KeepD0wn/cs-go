@@ -371,101 +371,77 @@ namespace ConsoleApp3
 
         static void Main(string[] args)
         {
-          //  Process.Start("demo.exe", "param1 param2");
-           // Console.WriteLine(args[0]);
-            List<string> k1 = new List<string>();
-
-            while(true)
-            {
-                if (FindWindow(null, $"Steam Login").ToString() != "0" && !k1.Contains(FindWindow(null, $"Steam Login").ToString()))
-                {
-                    k1.Add(FindWindow(null, $"Steam Login").ToString());
-                    Console.WriteLine("Добавили новый стим");
-                    Console.WriteLine(FindWindow(null, $"Steam Login").ToString());
-                }
-            }
+            //  Process.Start("demo.exe", "param1 param2");
+            // Console.WriteLine(args[0]);
             
 
-                //var task1 = f1();
-                //var task2 = f2();
-                //Console.WriteLine("main");
 
-                //task.Wait();
-                //Console.WriteLine(task.Result);
-                //Console.WriteLine("da"); 
+            //var task1 = f1();
+            //var task2 = f2();
+            //Console.WriteLine("main");
 
+            //task.Wait();
+            //Console.WriteLine(task.Result);
+            //Console.WriteLine("da"); 
+            
 
-                //uint MOUSEEVENTF_LEFTDOWN = 0x02;
-                //uint MOUSEEVENTF_LEFTUP = 0x04;
+            //while (Process.GetProcessesByName("steam").Length < 5) //processStarted < count // 'ЭТА ВЕРСИЯ ДЛЯ ПОДДЕРЖАНИЯ ВСЕГДА N ПОТОКОВ и норм размещения окон
+            //{
+            //    Thread myThread = new Thread(delegate () { StartCsGo(); });
+            //    myThread.Start();
+            //    myThread.Join();
+            //    i += 1;
+            //}
 
-                //int x = 480;
-                //int y = 480;
-                //SetCursorPos(x, y);
-
-                //mouse_event(MOUSEEVENTF_LEFTDOWN, (uint)x, (uint)y, 0, 0);
-                //mouse_event(MOUSEEVENTF_LEFTUP, (uint)x, (uint)y, 0, 0);
-
-                //mouse_event(MOUSEEVENTF_LEFTDOWN, 1000, 1080, 0, 0);
-                //mouse_event(MOUSEEVENTF_LEFTUP, 1000, 1080, 0, 0);
-
-
-                //while (Process.GetProcessesByName("steam").Length < 5) //processStarted < count // 'ЭТА ВЕРСИЯ ДЛЯ ПОДДЕРЖАНИЯ ВСЕГДА N ПОТОКОВ и норм размещения окон
-                //{
-                //    Thread myThread = new Thread(delegate () { StartCsGo(); });
-                //    myThread.Start();
-                //    myThread.Join();
-                //    i += 1;
-                //}
-
-                //StartAsync();
-                //Console.WriteLine("Задержка пошла");
-                //Thread.Sleep(60000);
+            //StartAsync();
+            //Console.WriteLine("Задержка пошла");
+            //Thread.Sleep(60000);
 
 
 
 
-                //--------------------------------------------------------------------------------------------------------------ТУТ находим процесс перед килом
-                //IntPtr cs = FindWindow(null, "Counter-Strike: Global Offensive");
-                //int steamProcId = 0;
-                //GetWindowThreadProcessId(cs, ref steamProcId);
-                //Process steamProc = Process.GetProcessById(steamProcId);
-                //steamProc.Kill();
+            //--------------------------------------------------------------------------------------------------------------ТУТ находим процесс перед килом
+            //IntPtr cs = FindWindow(null, "Counter-Strike: Global Offensive");
+            //int steamProcId = 0;
+            //GetWindowThreadProcessId(cs, ref steamProcId);
+            //Process steamProc = Process.GetProcessById(steamProcId);
+            //steamProc.Kill();
 
-                //var selectedTeams = from t in Process.GetProcesses() // определяем каждый объект из teams как t
-                //                    where t.ProcessName.Contains("csgo") //фильтрация по критерию
-                //                    select t; // выбираем объект
-                //                              // where t.MainWindowTitle.Contains("csgo_gmyemqllylxr")
-
-
-                //Process[] localByName = Process.GetProcessesByName("csgo");
-                //foreach (var t in localByName)
-                //{
-                //    t.Kill();
-                //}
-
-                //DateTime waitFor = DateTime.Now.AddSeconds(50);
-                //DateTime now = DateTime.Now;
-                //--------------------------------------------------------------------------------------------------------------
+            //var selectedTeams = from t in Process.GetProcesses() // определяем каждый объект из teams как t
+            //                    where t.ProcessName.Contains("csgo") //фильтрация по критерию
+            //                    select t; // выбираем объект
+            //                              // where t.MainWindowTitle.Contains("csgo_gmyemqllylxr")
 
 
+            //Process[] localByName = Process.GetProcessesByName("csgo");
+            //foreach (var t in localByName)
+            //{
+            //    t.Kill();
+            //}
 
-                //  var file = GetResourceStream(resName);
-
-                //List<Thread> listthread = new List<Thread>();
-
-                //Console.Title = "con1";
-                //for (int i = 0; i < 5; i++)
-                //{
-
-                //    Thread myThread = new Thread(new ThreadStart(Fo));
-                //    myThread.Name = "Поток " + i.ToString();
-                //    myThread.Start();
+            //DateTime waitFor = DateTime.Now.AddSeconds(50);
+            //DateTime now = DateTime.Now;
+            //--------------------------------------------------------------------------------------------------------------
 
 
-                //    //listthread.Add(thread);
-                //}                
 
-                Console.WriteLine("Done");
+            //  var file = GetResourceStream(resName);
+
+            //List<Thread> listthread = new List<Thread>();
+
+            //Console.Title = "con1";
+            //for (int i = 0; i < 5; i++)
+            //{
+
+            //    Thread myThread = new Thread(new ThreadStart(Fo));
+            //    myThread.Name = "Поток " + i.ToString();
+            //    myThread.Start();
+
+
+            //    //listthread.Add(thread);
+            //}                
+
+            Console.WriteLine("Done");
             Console.ReadLine();
         }
     }

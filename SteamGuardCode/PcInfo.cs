@@ -19,9 +19,14 @@ namespace SteamGuardCode
             {
                 string final = "";
 
+                ManagementObjectSearcher searcher10 = new ManagementObjectSearcher("root\\CIMV2",
+                   "SELECT UUID FROM Win32_ComputerSystemProduct");
+                foreach (ManagementObject queryObj in searcher10.Get())
+                    final += queryObj["UUID"].ToString() + "|";
+
                 String host = System.Net.Dns.GetHostName();
                 System.Net.IPAddress ip = System.Net.Dns.GetHostByName(host).AddressList[0];
-                final += Registry.GetValue("HKEY_LOCAL_MACHINE\\HARDWARE\\DESCRIPTION\\System\\BIOS", "BaseBoardProduct", 0).ToString();
+                final += Registry.GetValue("HKEY_LOCAL_MACHINE\\HARDWARE\\DESCRIPTION\\System\\BIOS", "BaseBoardProduct", 0).ToString() + "|";
 
                 string for2videocards = "";
                 ManagementObjectSearcher searcher11 = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController");
@@ -29,14 +34,14 @@ namespace SteamGuardCode
                 {
                     for2videocards = queryObj["VideoProcessor"].ToString();
                 }
-                final += for2videocards;
+                final += for2videocards + "|";
 
                 ManagementObjectSearcher searcher8 = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_Processor");
                 foreach (ManagementObject queryObj in searcher8.Get())
                 {
-                    final += queryObj["Name"];
-                    final += queryObj["NumberOfCores"];
-                    final += queryObj["ProcessorId"];
+                    final += queryObj["Name"] + "|";
+                    final += queryObj["NumberOfCores"] + "|";
+                    final += queryObj["ProcessorId"] + "|";
                 }
 
                 ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_DiskDrive");
@@ -44,9 +49,9 @@ namespace SteamGuardCode
                 {
                     if (info["DeviceID"].ToString().Contains("PHYSICALDRIVE0"))
                     {
-                        final += info["Model"];
-                        final += info["InterfaceType"];
-                        final += info["SerialNumber"];
+                        final += info["Model"] + "|";
+                        final += info["InterfaceType"] + "|";
+                        final += info["SerialNumber"] + "|";
                     }
                 }
 

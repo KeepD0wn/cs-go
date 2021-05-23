@@ -85,6 +85,12 @@ namespace ConsoleApp1
 			PostMessage(GetForegroundWindow(), 0x50, 1, ret);
 		}
 
+		[DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
+		public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint cButtons, uint dwExtraInfo);
+
+		[System.Runtime.InteropServices.DllImport("user32.dll")]
+		static extern bool SetCursorPos(int x, int y);
+
 		[DllImport("user32.dll")]
 		static extern int LoadKeyboardLayout(string pwszKLID, uint Flags);
 
@@ -93,15 +99,7 @@ namespace ConsoleApp1
 
 		[DllImport("user32.dll", CharSet = CharSet.Auto)]
 		public static extern bool PostMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
-
-		[DllImport("kernel32.dll")]
-		private static extern IntPtr GetConsoleWindow();
-
-		[DllImport("user32.dll")]
-		private static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
-
-		[DllImport("user32.dll")]
-		static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+		
 
 		[DllImport("user32.dll", SetLastError = true)]
 		public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
@@ -109,17 +107,8 @@ namespace ConsoleApp1
 		[DllImport("USER32.DLL")]
 		public static extern bool SetForegroundWindow(IntPtr hWnd);
 
-		[DllImport("user32.dll", SetLastError = true)]
-		public static extern IntPtr GetWindow(IntPtr HWnd, GetWindow_Cmd cmd);
-
-		[DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-		public static extern IntPtr GetModuleHandle(string lpModuleName);
-
 		[DllImport("user32.dll")]
 		static extern bool SetWindowText(IntPtr hWnd, string text);
-
-		[DllImport("user32.dll", CharSet = CharSet.Auto)]
-		private static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
 
 		[DllImport("user32.dll")]
 		public static extern UInt32 GetWindowThreadProcessId(IntPtr hwnd, ref Int32 pid);
@@ -189,11 +178,17 @@ namespace ConsoleApp1
 
 		static int minToNewCycle = timeIdle / 60000;
 
+		static uint MOUSEEVENTF_LEFTDOWN = 0x02;
+
+		static uint MOUSEEVENTF_LEFTUP = 0x04;
+
 		static System.Timers.Timer tmr = new System.Timers.Timer();
 
 		static int timerDelayInMins = 1;
 
 		static int timerDelayInSeconds = timerDelayInMins * 1000 * 60;
+
+		static List<string> listSteamLogin = new List<string>();
 
 		private static void TmrEvent(object sender, ElapsedEventArgs e)
 		{
@@ -214,6 +209,12 @@ namespace ConsoleApp1
 		{
 			k = true;
 			timer.Enabled = false;			
+		}
+
+		private static void CheckTimeSteam(ref bool k, System.Timers.Timer timer)
+		{
+			k = true;
+			timer.Enabled = false;
 		}
 
 		private static IntPtr FindGuard() //, System.Timers.Timer steamGuardTimer
@@ -254,7 +255,12 @@ namespace ConsoleApp1
 				{
 					Console.WriteLine("Steam Guard still on");
 					Console.WriteLine(new string('-', 35));
-                    try
+					//try
+					//{
+					//	listSteamLogin.Remove(steamProc.MainWindowHandle.ToString());
+					//}
+					//catch { }
+					try
                     {
 						steamProc.Kill(); //TODO: проверять существует ли 
 					}
@@ -273,6 +279,11 @@ namespace ConsoleApp1
 			{
 				Console.WriteLine("[SYSTEM] Steam Warning");
 				Console.WriteLine(new string('-', 35));
+				//try
+				//{
+				//	listSteamLogin.Remove(steamProc.MainWindowHandle.ToString());
+				//}
+				//catch { }
 				try
 				{
 					steamProc.Kill(); //TODO: проверять существует ли 
@@ -326,12 +337,12 @@ namespace ConsoleApp1
 
 		private static void TypeInCsgo(Process steamProc, string login, int accid, IntPtr console)
 		{
-			lock (threadLockType)
+			IntPtr csgoWin = FindWindow(null, $"csgo_{login}");
+			if (csgoWin.ToString() != "0")
 			{
-				IntPtr csgoWin = FindWindow(null, $"csgo_{login}");
-				if (csgoWin.ToString() != "0")
+				lock (threadLockType)
 				{
-					Thread.Sleep(500); //тестим ввод размера окна
+					Thread.Sleep(500);
 					string setSize = $"mat_setvideomode {xSize} {ySize} 1";
 					foreach (char ch in setSize)
 					{
@@ -350,22 +361,39 @@ namespace ConsoleApp1
 					Thread.Sleep(500);
 					PostMessage(csgoWin, WM_KEYDOWN, VK_ENTER, 1);
 					Thread.Sleep(500);
-					//SetForegroundWindow(console);
+				}				
+
+				Thread.Sleep(60000);
+				lock (threadLockType)
+				{
+					SetForegroundWindow(console);
+					Thread.Sleep(100);
+
+					int xCs = xOffset + 80; //+ отступ в зависимости от окна
+					int yCs = yOffset + 80;
+					int x = monitorSizeX-350;
+					int y = monitorSizeY - 300;
+
+					//дабл клик по окну
+					SetCursorPos(xCs, yCs);
+					mouse_event(MOUSEEVENTF_LEFTDOWN, (uint)xCs, (uint)yCs, 0, 0);
+					mouse_event(MOUSEEVENTF_LEFTUP, (uint)xCs, (uint)yCs, 0, 0);
+					mouse_event(MOUSEEVENTF_LEFTDOWN, (uint)xCs, (uint)yCs, 0, 0);
+					mouse_event(MOUSEEVENTF_LEFTUP, (uint)xCs, (uint)yCs, 0, 0);
+					Thread.Sleep(500);
+
+					//потом 1 по консоли
+					SetCursorPos(x, y);
+					mouse_event(MOUSEEVENTF_LEFTDOWN, (uint)x, (uint)y, 0, 0);
+					mouse_event(MOUSEEVENTF_LEFTUP, (uint)x, (uint)y, 0, 0);
 				}
-				//else
-				//{
-				//	Console.WriteLine($"[SYSTEM] CSGO not found");
-				//	SetOnline(0, accid);
-				//	steamProc.Kill();
-				//	Thread.Sleep(1000);
-				//	throw new Exception("Abort");
-				//}
+
 			}
 		}
 
 		private static async Task TypeInCsgoAsync(Process steamProc, Process csgoProc, string login, int accid, IntPtr console)
 		{
-			await Task.Delay(90000);
+			await Task.Delay(100000);
 			Task t = Task.Run(() => TypeInCsgo(steamProc, login, accid, console));
             System.Timers.Timer timer = new System.Timers.Timer(timeIdle);
 			timer.Elapsed += (o, e) => KillCsSteam(steamProc, csgoProc, accid, login);
@@ -584,14 +612,27 @@ namespace ConsoleApp1
 					IntPtr steamWindow = new IntPtr();
 					IntPtr csgoWindow = new IntPtr();
 					IntPtr steamGuardWindow = new IntPtr();
-					
+					IntPtr console = FindWindow(null, "CSGO_IDLE_MACHINE");
+
+					bool timeIsOverSteam = false;
+					System.Timers.Timer tmrSteam = new System.Timers.Timer();
+					tmrSteam.Interval = 1000 * 40;
+					tmrSteam.Elapsed += (o, e) => CheckTimeSteam(ref timeIsOverSteam, tmrSteam);
+					tmrSteam.Enabled = true;
+					lock (threadLockType)
+					{
+						SetForegroundWindow(console);
+					}						
 
 					while (true)
 					{
 						steamWindow = FindWindow(null, "Вход в Steam");
-						if (steamWindow.ToString() != "0")
+						if (steamWindow.ToString() != "0" && !listSteamLogin.Contains(steamWindow.ToString())) //ищем стим, которого не было
 						{
 							Console.WriteLine("[SYSTEM] Steam detected");
+
+							listSteamLogin.Add(steamWindow.ToString());
+
 							Thread.Sleep(500);
 							GetWindowThreadProcessId(steamWindow, ref steamProcId);
 							steamProc = Process.GetProcessById(steamProcId);
@@ -601,9 +642,12 @@ namespace ConsoleApp1
 						}
 
 						steamWindow = FindWindow(null, "Steam Login");
-						if (steamWindow.ToString() != "0")
+						if (steamWindow.ToString() != "0" && !listSteamLogin.Contains(steamWindow.ToString()))
 						{
 							Console.WriteLine("[SYSTEM] Steam detected");
+
+							listSteamLogin.Add(steamWindow.ToString());
+
 							Thread.Sleep(500);
 							GetWindowThreadProcessId(steamWindow, ref steamProcId);
 							steamProc = Process.GetProcessById(steamProcId);
@@ -611,32 +655,34 @@ namespace ConsoleApp1
 							SetWindowText(steamProc.MainWindowHandle, $"steam_{login}");
 							break;
 						}
+                        else
+                        {
+							Thread.Sleep(500);
+                        }
+
+
+						if (timeIsOverSteam == true)
+						{							
+							try
+							{ //TODO: узнать тот ли стим убивает
+								int x = 0;
+								GetWindowThreadProcessId(steamWindow, ref x);
+								Process steamProcS = Process.GetProcessById(x);
+								//listSteamLogin.Remove(steamProcS.MainWindowHandle.ToString());
+								Console.WriteLine("[911] Error");
+								steamProcS.Kill();
+							}
+							catch
+							{
+								Console.WriteLine("[219][SYSTEM] Error");
+							}
+							Console.WriteLine("[SYSTEM] No Steam detected");
+							Thread.Sleep(1000);
+							throw new Exception("Abort");
+						}
 
 						Thread.Sleep(100);
-					}
-
-					//CloseSteamPlesh();
-					Thread.Sleep(1000); //если не делать делей, то киляется ещё прошлая кска
-					if (FindWindow(null, $"steam_{login}").ToString() == "0")
-					{
-						Console.WriteLine("[777][SYSTEM] Wait a little"); 
-						Thread.Sleep(10000);
-
-						//УБИЙСТВО НЕ ОЧЕНЬ ИДЕЯ, ИХ СТАНОВИТСЯ ВСЁ БОЛЬЩЕ
-                        //Process process2 = new Process(); //КАК НИ СТРАННО, НО УБИЙСТВО ПЛЕШИВОГО СТИМА РАБОТАЕТ ТОЛЬКО ИЗ НОВОГО ПРОЦЕССА
-                        //ProcessStartInfo processStartInfo1 = new ProcessStartInfo();
-                        //processStartInfo1.WindowStyle = ProcessWindowStyle.Hidden;
-                        //processStartInfo1.FileName = "cmd.exe";
-                        //processStartInfo1.Arguments = string.Format("/C \"{0}\"", new object[]
-                        //{
-                        //         $@"{AppDomain.CurrentDomain.BaseDirectory}\kill.exe"
-                        //}); ;
-                        //process2.StartInfo = processStartInfo1;
-                        //process2.Start();
-                        //process2.WaitForExit(3000);
-
-                        //throw new Exception("Abort");
-                    }
+					}					
 
 					bool guardDetected1 = false;
 					var codeGuardTask = GetGuardCodeAsync(secretKey);
@@ -660,9 +706,8 @@ namespace ConsoleApp1
 						}
 
 						Thread.Sleep(100);
-					}
+					}					
 					
-					IntPtr console = FindWindow(null, "CSGO_IDLE_MACHINE"); //TODO пофиксить стим варнинг
 					codeGuardTask.Wait();
 					Console.WriteLine($"Guard code: {codeGuardTask.Result}");
 					if (guardDetected1 == true && steamGuardWindow.ToString() != "0")
@@ -675,6 +720,12 @@ namespace ConsoleApp1
 					}
 					else
 					{
+						//try
+						//{
+						//	listSteamLogin.Remove(steamProc.MainWindowHandle.ToString());
+						//}
+						//catch { }
+
 						steamProc.Kill(); //процесс подвисает на время загрузки гварда, никак не убить
 						//listSteam.Remove(steamProc);
 						Console.WriteLine("[SYSTEM] No steam Guard detected №2");
@@ -682,11 +733,11 @@ namespace ConsoleApp1
 						throw new Exception("Abort");
 					}
 
-					CheckGuardClosed(steamGuardWindow, steamProc, console, accid, codeGuardTask.Result); //тут должно отрабатывать
+					CheckGuardClosed(steamGuardWindow, steamProc, console, accid, codeGuardTask.Result); //тут должно отрабатывать но вообще неочаа
 
 					bool timeIsOver = false;
 					System.Timers.Timer tmr2 = new System.Timers.Timer();
-                    tmr2.Interval = 1000*80;
+                    tmr2.Interval = 1000*120;
                     tmr2.Elapsed += (o, e) => CheckTime(ref timeIsOver, tmr2);
 					tmr2.Enabled = true;
 
@@ -708,7 +759,12 @@ namespace ConsoleApp1
 
 						if (timeIsOver == true)
                         {
-                            try
+							//try
+							//{
+							//	listSteamLogin.Remove(steamProc.MainWindowHandle.ToString());
+							//}
+							//catch { }
+							try
                             {
 								steamProc.Kill();
 							}
@@ -813,6 +869,11 @@ namespace ConsoleApp1
 			SetWindowPos(conWindow, IntPtr.Zero, monitorSizeX - consoleX, monitorSizeY - consoleY - 40, consoleX, consoleY, SWP_NOZORDER); //вылазит за экран если размер элементов больше 100%			
 			SetForegroundWindow(conWindow);
 
+			Console.ForegroundColor = ConsoleColor.Red;
+			Console.WriteLine("IDLE MACHINE v1.5");
+			Console.WriteLine("discord.gg/nRrrpqhRtg");
+			Console.ResetColor();
+
 			if (File.Exists($@"{AppDomain.CurrentDomain.BaseDirectory}\License.lic"))
 			{
                 string key = "";
@@ -852,6 +913,7 @@ namespace ConsoleApp1
                             {
                                 CheckSubscribe(key);
                                 int i = 0;
+								listSteamLogin.Add("0"); //иногда ловил нолики при закрытии на всякий вставляю
 								while (Process.GetProcessesByName("csgo").Length < count) //processStarted < count // 'ЭТА ВЕРСИЯ ДЛЯ ПОДДЕРЖАНИЯ ВСЕГДА N ПОТОКОВ и норм размещения окон
 								{
 									Thread myThread = new Thread(delegate () { StartCsGo(Process.GetProcessesByName("csgo").Length+1, count); });
