@@ -98,8 +98,7 @@ namespace ConsoleApp1
 		public static extern IntPtr GetForegroundWindow();
 
 		[DllImport("user32.dll", CharSet = CharSet.Auto)]
-		public static extern bool PostMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
-		
+		public static extern bool PostMessage(IntPtr hWnd, int Msg, int wParam, int lParam);		
 
 		[DllImport("user32.dll", SetLastError = true)]
 		public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
@@ -160,7 +159,7 @@ namespace ConsoleApp1
 
 		private static List<Process> listSteam = new List<Process>();
 
-		private static int timeIdle = 12300000; //205 минут 12300000;
+		private static int timeIdle = 12300000; //205 минут 12600000;
 
 		private static int consoleX = 380;
 		
@@ -189,6 +188,10 @@ namespace ConsoleApp1
 		static int timerDelayInSeconds = timerDelayInMins * 1000 * 60;
 
 		static List<string> listSteamLogin = new List<string>();
+
+		static int exceptionsInARow = 0;
+
+		private static bool updatingWasFound = false;
 
 		private static void TmrEvent(object sender, ElapsedEventArgs e)
 		{
@@ -265,14 +268,15 @@ namespace ConsoleApp1
                     catch 
 					{
 						Console.WriteLine("[201][SYSTEM] Error");
-					}					
+					}
 					//listSteam.Remove(steamProc);
+					exceptionsInARow += 1;
 					Thread.Sleep(1000);
 					throw new Exception("Abort");
 				}
 			}
 
-			IntPtr steamWarning = FindWindow(null, "Steam - Warning");
+			IntPtr steamWarning = FindWindow(null, "Steam-Warning"); //тут убрали пробелы, тк он не детектит
 			if (steamWarning.ToString() != "0")
 			{
 				Console.WriteLine("[SYSTEM] Steam Warning");
@@ -291,6 +295,7 @@ namespace ConsoleApp1
 					Console.WriteLine("[202][SYSTEM] Error");
 				}
 				//listSteam.Remove(steamProc);
+				exceptionsInARow += 1;
 				Thread.Sleep(1000);
 				throw new Exception("Abort");
 			}
@@ -308,12 +313,13 @@ namespace ConsoleApp1
 			string codeGuard = acc.GenerateSteamGuardCode();
 			return codeGuard;
 		}
+				
 
 		private static async Task<string> GetGuardCodeAsync(string secretKey)
 		{
 			string s = await Task.Run(() => GetGuardCode(secretKey));
 			return s;
-		}
+		}		
 
 		private static void SetCsgoPos(IntPtr csgoWindow, int xOffset, int yOffset,string login)
 		{
@@ -333,13 +339,33 @@ namespace ConsoleApp1
 			await Task.Run(() => SetCsgoPos(csgoWindow, xOffset1, yOffset1,login));
 		}
 
-		private static void TypeInCsgo(Process steamProc, string login, int accid, IntPtr console)
+		private static void TypeInCsgo(Process steamProc, string login, int accid, IntPtr console, int xOff, int yOff)
 		{
 			IntPtr csgoWin = FindWindow(null, $"csgo_{login}");
 			if (csgoWin.ToString() != "0")
 			{
-				lock (threadLockType)
-				{
+				lock (threadLockType) //тут снимаем фокус с кски
+				{					
+					Thread.Sleep(100);
+					//SetForegroundWindow(csgoWin);
+					int xCs = xOff + 40; //+ отступ в зависимости от окна
+					int yCs = yOff + 160;
+					int x = monitorSizeX - 350;
+					int y = monitorSizeY - 300;
+
+					//клик по окну
+					SetCursorPos(xCs, yCs);
+					mouse_event(MOUSEEVENTF_LEFTDOWN, (uint)xCs, (uint)yCs, 0, 0);
+					mouse_event(MOUSEEVENTF_LEFTUP, (uint)xCs, (uint)yCs, 0, 0);
+					Thread.Sleep(500);
+
+					//потом 1 по консоли
+					SetForegroundWindow(console);
+					SetCursorPos(x, y);
+					mouse_event(MOUSEEVENTF_LEFTDOWN, (uint)x, (uint)y, 0, 0);
+					mouse_event(MOUSEEVENTF_LEFTUP, (uint)x, (uint)y, 0, 0);
+				
+					//тут уже вписывает коннект в консоль
 					Thread.Sleep(500);
 					string setSize = $"mat_setvideomode {xSize} {ySize} 1";
 					foreach (char ch in setSize)
@@ -361,38 +387,13 @@ namespace ConsoleApp1
 					Thread.Sleep(500);
 				}				
 
-				Thread.Sleep(60000);
-				lock (threadLockType)
-				{
-					SetForegroundWindow(console);
-					Thread.Sleep(100);
-
-					int xCs = xOffset + 80; //+ отступ в зависимости от окна
-					int yCs = yOffset + 80;
-					int x = monitorSizeX-350;
-					int y = monitorSizeY - 300;
-
-					//дабл клик по окну
-					SetCursorPos(xCs, yCs);
-					mouse_event(MOUSEEVENTF_LEFTDOWN, (uint)xCs, (uint)yCs, 0, 0);
-					mouse_event(MOUSEEVENTF_LEFTUP, (uint)xCs, (uint)yCs, 0, 0);
-					mouse_event(MOUSEEVENTF_LEFTDOWN, (uint)xCs, (uint)yCs, 0, 0);
-					mouse_event(MOUSEEVENTF_LEFTUP, (uint)xCs, (uint)yCs, 0, 0);
-					Thread.Sleep(500);
-
-					//потом 1 по консоли
-					SetCursorPos(x, y);
-					mouse_event(MOUSEEVENTF_LEFTDOWN, (uint)x, (uint)y, 0, 0);
-					mouse_event(MOUSEEVENTF_LEFTUP, (uint)x, (uint)y, 0, 0);
-				}
-
 			}
 		}
 
-		private static async Task TypeInCsgoAsync(Process steamProc, Process csgoProc, string login, int accid, IntPtr console)
+		private static async Task TypeInCsgoAsync(Process steamProc, Process csgoProc, string login, int accid, IntPtr console, int xOff,int yOff)
 		{
 			await Task.Delay(100000);
-			Task t = Task.Run(() => TypeInCsgo(steamProc, login, accid, console));
+			Task t = Task.Run(() => TypeInCsgo(steamProc, login, accid, console, xOff, yOff));
             System.Timers.Timer timer = new System.Timers.Timer(timeIdle);
 			timer.Elapsed += (o, e) => KillCsSteam(steamProc, csgoProc, accid, login);
             timer.AutoReset = false;
@@ -446,7 +447,7 @@ namespace ConsoleApp1
 					}
 					catch (Exception ex)
 					{
-						Console.WriteLine($"[900][LOGIN: {login}]" + ex);
+						Console.WriteLine($"[950][LOGIN: {login}]" + ex);
 					}
 					finally
 					{
@@ -538,7 +539,7 @@ namespace ConsoleApp1
 				{
 					//записываем данные в переменные
 					try
-					{
+					{						
 						conn.Open();
 						var com = new MySqlCommand("USE csgo; " +
 							"select * from accounts where isOnline = 0 AND NOW() > canPlayDate limit 1", conn);
@@ -576,11 +577,42 @@ namespace ConsoleApp1
 					{
 						conn.Close();
 						Console.WriteLine(ex.Message);
-						if (ex.Message == "[903][SYSTEM] No suitable data")
+						if (ex.Message == "[902][SYSTEM] No suitable data")
 						{
-							Thread.Sleep(10000);
+							Console.WriteLine("Wait until all accounts are closed");
+							Console.ReadLine();
 							Environment.Exit(0);
 						}
+					}
+
+					if(exceptionsInARow!=0)
+					Console.WriteLine($"Exceptions in a row: {exceptionsInARow}");
+
+					if (exceptionsInARow >= 3)
+					{
+						Console.WriteLine($"Габелла по ошибках их {exceptionsInARow}");
+						try
+						{
+							DateTime date = DateTime.Now;
+							conn.Open();
+							var com1 = new MySqlCommand("USE csgo; " +
+							"Update accounts set canPlayDate = @canPlayDate where id = @id", conn);
+							com1.Parameters.AddWithValue("@canPlayDate", date.AddHours(2));
+							com1.Parameters.AddWithValue("@id", accid);
+							com1.ExecuteNonQuery();
+							conn.Close();
+						}
+						catch (Exception ex)
+						{
+							Console.WriteLine(ex.Message);
+						}
+						finally
+						{
+							exceptionsInARow = 0;
+							conn.Close();
+						}
+						Console.WriteLine("[066][SYSTEM] Too much exceptions");
+						throw new Exception("Abort");
 					}
 
 					Process csgoProc = new Process();
@@ -590,21 +622,21 @@ namespace ConsoleApp1
 					ProcessStartInfo processStartInfo = new ProcessStartInfo();
 
 					processStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-					processStartInfo.FileName = "cmd.exe";
-					processStartInfo.Arguments = string.Format("/C \"{0}\" -login {1} {2} -applaunch 730 -no-browser -language {3}{4}-x {5} -y {6} {7} {8}", new object[]
-					{
-					   @"C:\Program Files (x86)\Steam\steam.exe",
-					  login,
-					   password,
-					   accid,
-					   Program.V2,
-					   xSize * windowInARow,
-					   Program.yOffset,
-					   Program.parsnew,
-					   Program.def
-					});
+					processStartInfo.FileName = "cmd.exe";					
+                    processStartInfo.Arguments = string.Format("/C \"{0}\" -login {1} {2} -applaunch 730 -no-browser -language {3}{4}-x {5} -y {6} {7} {8}", new object[]
+                    {
+                       @"C:\Program Files (x86)\Steam\steam.exe",
+                      login,
+                       password,
+                       accid,
+                       Program.V2,
+                       xSize * windowInARow,
+                       Program.yOffset,
+                       Program.parsnew,
+                       Program.def
+                    });
 
-					process.StartInfo = processStartInfo;
+                    process.StartInfo = processStartInfo;
 					process.Start();
 
 					IntPtr steamWindow = new IntPtr();
@@ -675,6 +707,7 @@ namespace ConsoleApp1
 								Console.WriteLine("[219][SYSTEM] Error");
 							}
 							Console.WriteLine("[SYSTEM] No Steam detected");
+							exceptionsInARow += 1;
 							Thread.Sleep(1000);
 							throw new Exception("Abort");
 						}
@@ -727,9 +760,55 @@ namespace ConsoleApp1
 						steamProc.Kill(); //процесс подвисает на время загрузки гварда, никак не убить
 						//listSteam.Remove(steamProc);
 						Console.WriteLine("[SYSTEM] No steam Guard detected №2");
+						exceptionsInARow += 1;
 						Thread.Sleep(1000);
 						throw new Exception("Abort");
 					}
+				
+					var ts = new CancellationTokenSource(); //отменяемый таск
+					CancellationToken ct = ts.Token;
+					Task.Factory.StartNew(() =>
+					{
+						while (true)
+						{
+							IntPtr cs = FindWindow(null, "Updating Counter-Strike: Global Offensive");
+							if (cs.ToString() != "0")
+							{
+								updatingWasFound = true;
+								//Console.WriteLine("[SYSTEM] Updating...");
+								//Thread.Sleep(5000);			
+
+								IntPtr toggle = FindWindow(null, "Toggle"); 
+								if (toggle.ToString() == "0")
+								{
+									Process processTog = new Process();
+									ProcessStartInfo processStartInfoTog = new ProcessStartInfo();
+
+									processStartInfoTog.WindowStyle = ProcessWindowStyle.Hidden;
+									processStartInfoTog.FileName = "cmd.exe";
+									processStartInfoTog.Arguments = string.Format("/C \"{0}\" {1}", new object[]
+									{
+										$@"{AppDomain.CurrentDomain.BaseDirectory}\Toggle.exe",
+										lastCycle.ToString()
+									});
+
+									processTog.StartInfo = processStartInfoTog;
+									processTog.Start();
+									Environment.Exit(0);
+								}
+								else
+								{
+									Console.ReadLine(); //ждём пока тогл всё решит за нас
+								}
+							}
+
+							Thread.Sleep(500);
+							if (ct.IsCancellationRequested)
+							{
+								break;
+							}
+						}
+					}, ct);					
 
 					CheckGuardClosed(steamGuardWindow, steamProc, console, accid, codeGuardTask.Result); //тут должно отрабатывать но вообще неочаа
 
@@ -738,13 +817,16 @@ namespace ConsoleApp1
                     tmr2.Interval = 1000*120;
                     tmr2.Elapsed += (o, e) => CheckTime(ref timeIsOver, tmr2);
 					tmr2.Enabled = true;
+					int xOffSave = xOffset;
+					int yOffSave = yOffset;
 
-                    while (true)
+					while (true)
 					{
 						csgoWindow = FindWindow(null, "Counter-Strike: Global Offensive");
 						if (csgoWindow.ToString() != "0")
 						{							
 							Thread.Sleep(500);
+							ts.Cancel();
 							Console.WriteLine("[SYSTEM] CS:GO detected");
 							Console.WriteLine(new string('-', 20)+$"Current window: {currentCycle}/{lastCycle}");
 							GetWindowThreadProcessId(csgoWindow, ref csProcId);
@@ -757,11 +839,17 @@ namespace ConsoleApp1
 
 						if (timeIsOver == true)
                         {
-							//try
-							//{
-							//	listSteamLogin.Remove(steamProc.MainWindowHandle.ToString());
-							//}
-							//catch { }
+                            //try
+                            //{
+                            //	listSteamLogin.Remove(steamProc.MainWindowHandle.ToString());
+                            //}
+                            //catch { }	
+
+                            if (updatingWasFound == true)
+                            {
+								Console.ReadKey(); //ждём пока тогл сам закроет
+                            }
+
 							try
                             {
 								steamProc.Kill();
@@ -770,7 +858,8 @@ namespace ConsoleApp1
                             {
 								Console.WriteLine("[203][SYSTEM] Error");
 							}
-							Console.WriteLine("[SYSTEM] No CSGO detected");
+                            Console.WriteLine("[SYSTEM] No CSGO detected");
+							exceptionsInARow += 1;
 							Thread.Sleep(1000);
 							throw new Exception("Abort");
 						}
@@ -778,7 +867,8 @@ namespace ConsoleApp1
 					}
 					processStarted += 1;
 					SetOnline(1, accid);
-					TypeInCsgoAsync(steamProc, csgoProc, login, accid, console);
+					exceptionsInARow = 0;
+					TypeInCsgoAsync(steamProc, csgoProc, login, accid, console, xOffSave, yOffSave);
 				}
 			}
 			catch (Exception ex)
@@ -890,7 +980,7 @@ namespace ConsoleApp1
 			SetForegroundWindow(conWindow);
 
 			Console.ForegroundColor = ConsoleColor.Red;
-			Console.WriteLine("IDLE MACHINE v1.6");
+			Console.WriteLine("IDLE MACHINE v1.7.2");
 			Console.WriteLine("discord.gg/nRrrpqhRtg");
 			Console.ResetColor();
 
@@ -923,8 +1013,16 @@ namespace ConsoleApp1
 						{
 							serverConnection = connStr;
 							Console.OutputEncoding = Encoding.UTF8;
-							Console.WriteLine("Write the number of windows csgo: ");
-							int count = Convert.ToInt32(Console.ReadLine());
+							int count = 0;
+							try
+							{
+								count = Convert.ToInt32(args[0]);
+							}
+							catch
+							{
+								Console.WriteLine("Write the number of windows csgo: ");
+								count = Convert.ToInt32(Console.ReadLine());
+							}
 							int cycleCount = 0;
 							tmr.Interval = timerDelayInSeconds;
 							tmr.Elapsed += TmrEvent; //делаем за циклом что бы не стакались события
@@ -937,18 +1035,7 @@ namespace ConsoleApp1
                                 {
 									StartAsync(count);
 									hasStarted = true;
-								}
-
-								
-                                //int i = 0;
-                                //listSteamLogin.Add("0"); //иногда ловил нолики при закрытии на всякий вставляю
-                                //while (Process.GetProcessesByName("csgo").Length < count) //processStarted < count // 'ЭТА ВЕРСИЯ ДЛЯ ПОДДЕРЖАНИЯ ВСЕГДА N ПОТОКОВ и норм размещения окон
-                                //{
-                                //    Thread myThread = new Thread(delegate () { StartCsGo(Process.GetProcessesByName("csgo").Length + 1, count); });
-                                //    myThread.Start();
-                                //    myThread.Join();
-                                //    i += 1;
-                                //}
+								}                               
 
                                 cycleCount += 1;
 								Console.WriteLine($"[SYSTEM] Current cycle №{cycleCount}");
@@ -960,7 +1047,7 @@ namespace ConsoleApp1
 
 								//тут асинхронность, которая открывает кс если что
 
-								Thread.Sleep(timeIdle+90000); //запас уже 5 минут
+								Thread.Sleep(timeIdle); 
 								Console.ForegroundColor = ConsoleColor.Green; // устанавливаем цвет		
 								Console.WriteLine();
 								Console.WriteLine("[SYSTEM] New cycle");

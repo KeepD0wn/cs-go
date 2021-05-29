@@ -1,0 +1,6 @@
+C:\Users\gvozd\source\repos\ConsoleApp1\Toggle\bin\Release\Toggle.exe.config
+C:\Users\gvozd\source\repos\ConsoleApp1\Toggle\bin\Release\Toggle.exe
+C:\Users\gvozd\source\repos\ConsoleApp1\Toggle\bin\Release\Toggle.pdb
+C:\Users\gvozd\source\repos\ConsoleApp1\Toggle\obj\Release\Toggle.csproj.CoreCompileInputs.cache
+C:\Users\gvozd\source\repos\ConsoleApp1\Toggle\obj\Release\Toggle.exe
+C:\Users\gvozd\source\repos\ConsoleApp1\Toggle\obj\Release\Toggle.pdb

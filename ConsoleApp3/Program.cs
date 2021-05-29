@@ -19,6 +19,7 @@ using System.Timers;
 using System.Management;
 using Rijndael256;
 using Microsoft.Win32;
+using System.Drawing;
 
 namespace ConsoleApp3
 {
@@ -367,13 +368,49 @@ namespace ConsoleApp3
         {
             await Task.Run(() => Start());
         }
+        
+        private static IntPtr primary = GetDC(IntPtr.Zero);
+
+        const int DESKTOPVERTRES = 117;
+
+        const int DESKTOPHORZRES = 118;
+
+        static uint MOUSEEVENTF_LEFTDOWN = 0x02;
+
+        static uint MOUSEEVENTF_LEFTUP = 0x04;
+
+        private static int monitorSizeX = GetDeviceCaps(primary, DESKTOPHORZRES);
+
+        private static int monitorSizeY = GetDeviceCaps(primary, DESKTOPVERTRES);
+
+        private static bool updatingWasFound = false;
+
+        private static void ChechUpd()
+        {
+            while (true)
+            {
+                IntPtr cs = FindWindow(null, "Updating Counter-Strike: Global Offensive");
+                if (cs.ToString() != "0")
+                {
+                    Console.WriteLine("[SYSTEM] Updating...");
+                    Thread.Sleep(5000);
+                    updatingWasFound = true;
+                }               
+                Thread.Sleep(500);
+            }
+        }
+
+        private static async Task ChechUpdAsync()
+        {
+            await Task.Run(() => ChechUpd());
+        }
 
 
         static void Main(string[] args)
         {
             //  Process.Start("demo.exe", "param1 param2");
             // Console.WriteLine(args[0]);
-            
+
 
 
             //var task1 = f1();
@@ -383,7 +420,7 @@ namespace ConsoleApp3
             //task.Wait();
             //Console.WriteLine(task.Result);
             //Console.WriteLine("da"); 
-            
+
 
             //while (Process.GetProcessesByName("steam").Length < 5) //processStarted < count // 'ЭТА ВЕРСИЯ ДЛЯ ПОДДЕРЖАНИЯ ВСЕГДА N ПОТОКОВ и норм размещения окон
             //{
@@ -395,7 +432,30 @@ namespace ConsoleApp3
 
             //StartAsync();
             //Console.WriteLine("Задержка пошла");
-            //Thread.Sleep(60000);
+
+            var ts = new CancellationTokenSource();
+            CancellationToken ct = ts.Token;
+            Task.Factory.StartNew(() =>
+            {
+                while (true)
+                {
+                    // do some heavy work here
+                    Thread.Sleep(100);
+                    Console.WriteLine("Работаем");
+                    if (ct.IsCancellationRequested)
+                    {
+                        // another thread decided to cancel
+                        Console.WriteLine("task canceled");
+                        break;
+                    }
+                }
+            }, ct);
+
+            // Simulate waiting 3s for the task to complete
+            Thread.Sleep(3000);
+
+            // Can't wait anymore => cancel this task 
+            ts.Cancel();
 
 
 

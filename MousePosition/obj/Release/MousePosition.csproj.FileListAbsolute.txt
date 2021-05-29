@@ -1,0 +1,6 @@
+C:\Users\gvozd\source\repos\ConsoleApp1\MousePosition\bin\Release\MousePosition.exe.config
+C:\Users\gvozd\source\repos\ConsoleApp1\MousePosition\bin\Release\MousePosition.exe
+C:\Users\gvozd\source\repos\ConsoleApp1\MousePosition\bin\Release\MousePosition.pdb
+C:\Users\gvozd\source\repos\ConsoleApp1\MousePosition\obj\Release\MousePosition.csproj.CoreCompileInputs.cache
+C:\Users\gvozd\source\repos\ConsoleApp1\MousePosition\obj\Release\MousePosition.exe
+C:\Users\gvozd\source\repos\ConsoleApp1\MousePosition\obj\Release\MousePosition.pdb

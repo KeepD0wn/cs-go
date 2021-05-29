@@ -63,7 +63,7 @@ namespace ConsoleApp1
                 return result;
             }
             catch
-            {
+            {                
                 Console.WriteLine("[SYSTEM] Error, try without sandbox");
                 Thread.Sleep(5000);
                 Environment.Exit(0);
