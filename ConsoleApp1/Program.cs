@@ -350,7 +350,7 @@ namespace ConsoleApp1
 					//SetForegroundWindow(csgoWin);
 					int xCs = xOff + 40; //+ отступ в зависимости от окна
 					int yCs = yOff + 160;
-					int x = monitorSizeX - 350;
+					int x = monitorSizeX - 265;
 					int y = monitorSizeY - 300;
 
 					//клик по окну
