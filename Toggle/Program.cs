@@ -98,6 +98,53 @@ namespace Toggle
 
         static bool updateIsEnd = false;
 
+        static void CopyDirectory(DirectoryInfo source, DirectoryInfo destination)
+        {
+            if (!destination.Exists)
+            {
+                destination.Create();
+            }
+
+            if (!source.Exists)
+            {
+                source.Create();
+            }
+
+            // Copy all files.
+            FileInfo[] files = source.GetFiles();
+            foreach (FileInfo file in files)
+            {
+                try //если он захочет поменять атрибут у файла которого нет, то и бог с ним
+                {
+                    DirectoryInfo d = new DirectoryInfo(Path.Combine(destination.FullName, file.Name));
+                    if (d.Attributes != FileAttributes.Normal)
+                    {
+                        File.SetAttributes(d.ToString(), FileAttributes.Normal);
+                    }
+                }
+                catch { }
+
+                file.CopyTo(Path.Combine(destination.FullName,
+                    file.Name), true);
+            }
+
+            // Process subdirectories.
+            DirectoryInfo[] dirs = source.GetDirectories();
+            foreach (DirectoryInfo dir in dirs)
+            {
+                // Get destination directory.
+                string destinationDir = Path.Combine(destination.FullName, dir.Name);
+                DirectoryInfo k = new DirectoryInfo(destinationDir);
+                if (!k.Exists)
+                {
+                    destination.Create();
+                }
+
+                // Call CopyDirectory() recursively.
+                CopyDirectory(dir, new DirectoryInfo(destinationDir));
+            }
+        }
+
         static void Main(string[] args)
         {
             Console.Title = "Toggle";
@@ -135,6 +182,13 @@ namespace Toggle
                     Thread.Sleep(5000);
 
                     CloseAllProcess();
+
+                    //тут замена папок панорамы 
+                    string directoria = $@"{AppDomain.CurrentDomain.BaseDirectory}\csgoSettings\panorama\videos";
+                    string kuda = @"C:\Program Files (x86)\Steam\steamapps\common\Counter-Strike Global Offensive\csgo\panorama\videos";
+                    Directory.Delete(kuda, true); //true - если директория не пуста удаляем все ее содержимое
+                    CopyDirectory(new DirectoryInfo(directoria), new DirectoryInfo(kuda));
+
                     StartCS(countDone); //тут сразу открывается новый идл машин, а старый не успевает подождатьь 2 минуты
                     break;
                 }

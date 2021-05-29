@@ -385,26 +385,52 @@ namespace ConsoleApp3
 
         private static bool updatingWasFound = false;
 
-        private static void ChechUpd()
+        static void CopyDirectory(DirectoryInfo source, DirectoryInfo destination)
         {
-            while (true)
+            if (!destination.Exists)
             {
-                IntPtr cs = FindWindow(null, "Updating Counter-Strike: Global Offensive");
-                if (cs.ToString() != "0")
+                destination.Create();
+            }
+
+            if (!source.Exists)
+            {
+                source.Create();
+            }
+
+            // Copy all files.
+            FileInfo[] files = source.GetFiles();
+            foreach (FileInfo file in files)
+            {
+                try //если он захочет поменять атрибут у файла которого нет, то и бог с ним
                 {
-                    Console.WriteLine("[SYSTEM] Updating...");
-                    Thread.Sleep(5000);
-                    updatingWasFound = true;
-                }               
-                Thread.Sleep(500);
+                    DirectoryInfo d = new DirectoryInfo(Path.Combine(destination.FullName, file.Name));
+                    if (d.Attributes != FileAttributes.Normal)
+                    {
+                        File.SetAttributes(d.ToString(), FileAttributes.Normal);
+                    }
+                }
+                catch { }
+
+                file.CopyTo(Path.Combine(destination.FullName,
+                    file.Name), true);
+            }
+
+            // Process subdirectories.
+            DirectoryInfo[] dirs = source.GetDirectories();
+            foreach (DirectoryInfo dir in dirs)
+            {
+                // Get destination directory.
+                string destinationDir = Path.Combine(destination.FullName, dir.Name);
+                DirectoryInfo k = new DirectoryInfo(destinationDir);
+                if (!k.Exists)
+                {
+                    destination.Create();
+                }
+
+                // Call CopyDirectory() recursively.
+                CopyDirectory(dir, new DirectoryInfo(destinationDir));
             }
         }
-
-        private static async Task ChechUpdAsync()
-        {
-            await Task.Run(() => ChechUpd());
-        }
-
 
         static void Main(string[] args)
         {
@@ -433,30 +459,11 @@ namespace ConsoleApp3
             //StartAsync();
             //Console.WriteLine("Задержка пошла");
 
-            var ts = new CancellationTokenSource();
-            CancellationToken ct = ts.Token;
-            Task.Factory.StartNew(() =>
-            {
-                while (true)
-                {
-                    // do some heavy work here
-                    Thread.Sleep(100);
-                    Console.WriteLine("Работаем");
-                    if (ct.IsCancellationRequested)
-                    {
-                        // another thread decided to cancel
-                        Console.WriteLine("task canceled");
-                        break;
-                    }
-                }
-            }, ct);
+            string directoria = @"C:\Users\gvozd\Desktop\videos";
+            string kuda = @"C:\Users\gvozd\Desktop\videos1";
+            Directory.Delete(kuda, true); //true - если директория не пуста удаляем все ее содержимое
 
-            // Simulate waiting 3s for the task to complete
-            Thread.Sleep(3000);
-
-            // Can't wait anymore => cancel this task 
-            ts.Cancel();
-
+            CopyDirectory(new DirectoryInfo(directoria), new DirectoryInfo(kuda));
 
 
 
