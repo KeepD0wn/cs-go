@@ -20,6 +20,8 @@ using System.Management;
 using Rijndael256;
 using Microsoft.Win32;
 using System.Drawing;
+using WindowsInput;
+using WindowsInput.Native;
 
 namespace ConsoleApp3
 {
@@ -108,6 +110,8 @@ namespace ConsoleApp3
         public const int V = 0x56; // V key code
         public const int VK_CONTROL = 0x11; //Control key code
         public const int KEYEVENTF_KEYUP = 0x0002; //Key up flag
+        public const int KEYEVENTF_EXTENDEDKEY = 1;
+        private const int KEYEVENTF_KEYUP2 = 2;
 
         const int VK_ENTER = 0x0D;
 
@@ -448,24 +452,28 @@ namespace ConsoleApp3
             //Console.WriteLine("da"); 
 
 
-            //while (Process.GetProcessesByName("steam").Length < 5) //processStarted < count // 'ЭТА ВЕРСИЯ ДЛЯ ПОДДЕРЖАНИЯ ВСЕГДА N ПОТОКОВ и норм размещения окон
-            //{
-            //    Thread myThread = new Thread(delegate () { StartCsGo(); });
-            //    myThread.Start();
-            //    myThread.Join();
-            //    i += 1;
-            //}
 
-            //StartAsync();
-            //Console.WriteLine("Задержка пошла");
+            Console.Title = "fd1";
+            Thread.Sleep(3000);
+            IntPtr console = FindWindow(null, "fd1");
+            Console.WriteLine(console.ToString());
+           // SetForegroundWindow(console);
+            IntPtr cs = FindWindow(null, "Counter-Strike: Global Offensive"); //csgo_lwgxbf9lj
+            Console.WriteLine(cs.ToString());
+            //SetForegroundWindow(cs);
+            Thread.Sleep(500);
+            //PostMessage(cs, WM_KEYDOWN, 0xC0, 1); //0xC0 это тильда
+            //SendKeys.SendWait("+{`}");
+            //keybd_event(0xC0, 0, KEYEVENTF_EXTENDEDKEY, 0);
+            //keybd_event(0xC0, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
 
-            string directoria = @"C:\Users\gvozd\Desktop\videos";
-            string kuda = @"C:\Users\gvozd\Desktop\videos1";
-            Directory.Delete(kuda, true); //true - если директория не пуста удаляем все ее содержимое
-
-            CopyDirectory(new DirectoryInfo(directoria), new DirectoryInfo(kuda));
-
-
+            SetForegroundWindow(cs);
+            keybd_event(0xC0, 0, KEYEVENTF_EXTENDEDKEY, 0);
+            Thread.Sleep(100);
+            keybd_event(0xC0, 0, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
+            //var inputSimulator = new InputSimulator();
+            //inputSimulator.Keyboard.KeyDown(VirtualKeyCode.F10);
+            //inputSimulator.Keyboard.KeyDown(VirtualKeyCode.F10);
 
             //--------------------------------------------------------------------------------------------------------------ТУТ находим процесс перед килом
             //IntPtr cs = FindWindow(null, "Counter-Strike: Global Offensive");

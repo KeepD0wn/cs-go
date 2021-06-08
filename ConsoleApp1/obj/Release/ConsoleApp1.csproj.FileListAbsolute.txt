@@ -1,4 +1,3 @@
-C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Release\ConsoleApp1.csprojAssemblyReference.cache
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Release\ConsoleApp1.csproj.CoreCompileInputs.cache
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Release\ConsoleApp1.exe.config
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Release\ConsoleApp1.exe
@@ -39,3 +38,4 @@ C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Release\ConsoleApp1.exe
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Release\ConsoleApp1.pdb
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Release\ConsoleApp1.Properties.Resources.resources
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Release\ConsoleApp1.csproj.GenerateResource.cache
+C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Release\ConsoleApp1.csproj.AssemblyReference.cache

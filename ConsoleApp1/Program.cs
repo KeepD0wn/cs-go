@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Drawing;
 
 namespace ConsoleApp1
 {
@@ -46,7 +47,7 @@ namespace ConsoleApp1
 			" -noforcemaccel -limitvsconst +r_dynamic 0 -noforcemspd +fps_max 30 -nopreload -nopreloadmodels +cl_forcepreload 0 " +
 			"-nosound -novid -w 640 -h 480 "; //крайне важен пробел в конце		меньше чеи 640х480 нельзя, иначе кску крашит
 
-		private static string serverConnection = "";
+		private static string serverConnectionString = "";
 
 		public static string csgopath = "D:\\Games\\steamapps\\common\\Counter-Strike Global Offensive";
 
@@ -118,6 +119,9 @@ namespace ConsoleApp1
 		[DllImport("User32.dll")]
 		static extern IntPtr GetDC(IntPtr hwnd);
 
+		[DllImport("gdi32.dll", CharSet = CharSet.Auto, SetLastError = true, ExactSpelling = true)]
+		public static extern int BitBlt(IntPtr hDc, int x, int y, int nWidth, int nHeight, IntPtr hSrcDC, int xSrc, int ySrc, int dwRop);
+
 		[DllImport("gdi32.dll")]
 		static extern int GetDeviceCaps(IntPtr hdc, int nIndex);
 
@@ -136,6 +140,8 @@ namespace ConsoleApp1
 		const uint SWP_NOSIZE = 0x0001;
 
 		private static object mainObj = new object();
+
+		private static object relogLock = new object();
 
 		private static object threadLockType = new object();
 
@@ -159,7 +165,7 @@ namespace ConsoleApp1
 
 		private static List<Process> listSteam = new List<Process>();
 
-		private static int timeIdle = 12300000; //205 минут 12600000;
+		private static int timeIdle = 12600000; //205 минут 12600000;
 
 		private static int consoleX = 380;
 		
@@ -377,7 +383,7 @@ namespace ConsoleApp1
 
 					Thread.Sleep(500);
 					langToEn();
-					foreach (char ch in serverConnection)
+					foreach (char ch in serverConnectionString)
 					{
 						PostMessage(csgoWin, wmChar, ch, 0);
 						Thread.Sleep(50);
@@ -399,6 +405,77 @@ namespace ConsoleApp1
             timer.AutoReset = false;
             timer.Enabled = true;
         }
+
+		public static Color GetColorAt(System.Drawing.Point location)
+		{
+			var screenPixel = new Bitmap(1, 1, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+			using (var gdest = Graphics.FromImage(screenPixel))
+			{
+				using (var gsrc = Graphics.FromHwnd(IntPtr.Zero))
+				{
+					IntPtr hSrcDc = gsrc.GetHdc();
+					IntPtr hDc = gdest.GetHdc();
+					BitBlt(hDc, 0, 0, 1, 1, hSrcDc, location.X, location.Y, (int)CopyPixelOperation.SourceCopy);
+					gdest.ReleaseHdc();
+					gsrc.ReleaseHdc();
+				}
+			}
+
+			return screenPixel.GetPixel(0, 0);
+		}
+
+		private static void CheckCsGoStatus(int startX, int startY, IntPtr console, Process csgoProc)
+        {
+            lock (relogLock)
+            {
+				Color win1 = GetColorAt(new Point(startX + 95, startY + 14));
+				Color win2 = GetColorAt(new Point(startX + 14, startY + 7));
+				Color win3 = GetColorAt(new Point(startX + 19, startY + 18));
+				if (win1.R == 255 && win1.G == 255 && win1.B == 255 && win2.R == 166 && win2.G == 144 && win2.B == 100 && win3.R == 159 && win3.G == 73 && win3.B == 30) //если да, то это окно кс
+				{
+					Color menu1 = GetColorAt(new Point(startX + 7, startY + 47));
+					Color menu2 = GetColorAt(new Point(startX + 10, startY + 90));
+					Color menu3 = GetColorAt(new Point(startX + 26, startY + 32));
+					Color blueWin = GetColorAt(new Point(startX + 18, startY + 29));
+					if (blueWin.R >= 50 && blueWin.R <= 70 && blueWin.G >= 170 && blueWin.G <= 190 && blueWin.B >= 210 && blueWin.B <= 225) //если да, то в главном меню синяя полоска
+					{
+						Console.WriteLine("[144][SYSTEM][] Blue window");
+					}
+					//тут элсе иф и проверка на вак по 190-0-0 ргб и х18у29
+					if (menu1.R == 233 && menu1.G == 233 && menu1.B == 233 && menu2.R == 204 && menu2.G == 204 && menu2.B == 204 && menu3.R == 169 && menu3.G == 169 && menu3.B == 169) //если подходит по цветам то в главном меню и без плашки бана, с неё всё становится темнее и цвета другие
+					{
+						Console.WriteLine($"Окно для перезахода. Позиция {startX} и {startY}");
+						lock (threadLockType)
+						{
+							Console.WriteLine("[155][SYSTEM][] Lobbie relog");
+							TypeText(console,csgoProc.MainWindowHandle,serverConnectionString);
+						}
+						Thread.Sleep(5000); //5 сек делея что бы массовы перезаход не ложил комп
+					}
+				}
+			}			
+		}
+
+		private static void CheckLobbi(Process csgoProc,string login , IntPtr console, int xOff, int yOff)
+        {
+			while (true)
+			{
+				if (FindWindow(null, $"csgo_{login}").ToString() != "0")
+				{
+					CheckCsGoStatus(xOff, yOff, console, csgoProc);
+				}
+                else
+                {
+					break;
+                }
+				Thread.Sleep(20000);
+			}
+		}
+
+		private static async Task CheckLobbieAsync(Process csgoProc,string login, IntPtr console, int xOff, int yOff)
+		{
+			await Task.Run(() => CheckLobbi(csgoProc, login ,console , xOff, yOff));
+		}
 
 		private static void KillCsSteam(Process steamProc, Process csgoProc, int accid, string login)
 		{
@@ -485,21 +562,21 @@ namespace ConsoleApp1
 			}
 		}
 
-		private static void TypeText(IntPtr console, IntPtr steamGuardWindow, string str)
+		private static void TypeText(IntPtr console, IntPtr targer, string str)
 		{
 			langToEn();
 			Thread.Sleep(500); //когда проц загружен нужен делей
 			SetForegroundWindow(console);
 			Thread.Sleep(100);
-			SetForegroundWindow(steamGuardWindow);
+			SetForegroundWindow(targer);
 			Thread.Sleep(1000);
 			foreach (char ch in str)
 			{
-				PostMessage(steamGuardWindow, wmChar, ch, 0);
+				PostMessage(targer, wmChar, ch, 0);
 				Thread.Sleep(100);
 			}
 			Thread.Sleep(500);
-			PostMessage(steamGuardWindow, WM_KEYDOWN, VK_ENTER, 1);
+			PostMessage(targer, WM_KEYDOWN, VK_ENTER, 1);
 			Thread.Sleep(100);
 			SetForegroundWindow(console);
 		}
@@ -590,7 +667,6 @@ namespace ConsoleApp1
 
 					if (exceptionsInARow >= 3)
 					{
-						Console.WriteLine($"Габелла по ошибках их {exceptionsInARow}");
 						try
 						{
 							DateTime date = DateTime.Now;
@@ -1011,7 +1087,7 @@ namespace ConsoleApp1
 
                         if (connStr != "")
 						{
-							serverConnection = connStr;
+							serverConnectionString = connStr;
 							Console.OutputEncoding = Encoding.UTF8;
 							int count = 0;
 							try
