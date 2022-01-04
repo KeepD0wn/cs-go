@@ -673,7 +673,7 @@ namespace ConsoleApp1
 							conn.Open();
 							var com1 = new MySqlCommand("USE csgo; " +
 							"Update accounts set canPlayDate = @canPlayDate where id = @id", conn);
-							com1.Parameters.AddWithValue("@canPlayDate", date.AddHours(2));
+							com1.Parameters.AddWithValue("@canPlayDate", date.AddMinutes(10));
 							com1.Parameters.AddWithValue("@id", accid);
 							com1.ExecuteNonQuery();
 							conn.Close();
@@ -691,7 +691,20 @@ namespace ConsoleApp1
 						throw new Exception("Abort");
 					}
 
-					Process csgoProc = new Process();
+                    //перед запуском проверяем что бы не было заблудившихся стим логинов, что бы они не руинили заходы
+                    while (FindWindow(null, "Steam Login").ToString() != "0" && !listSteamLogin.Contains(FindWindow(null, "Steam Login").ToString()))
+                    {
+                        IntPtr wrongSteamWindow = FindWindow(null, "Steam Login");
+                        int WrongX = 0;
+                        GetWindowThreadProcessId(wrongSteamWindow, ref WrongX);
+                        Process WrongSteamLogingProc = Process.GetProcessById(WrongX);
+                        Console.WriteLine("[059] Wrong Steam Login Killed");
+                        WrongSteamLogingProc.Kill();
+                        Thread.Sleep(1000);
+                    }
+
+
+                    Process csgoProc = new Process();
 					Process steamProc = new Process();
 					Process guardProc = new Process();
 					Process process = new Process();
@@ -722,7 +735,7 @@ namespace ConsoleApp1
 
 					bool timeIsOverSteam = false;
 					System.Timers.Timer tmrSteam = new System.Timers.Timer();
-					tmrSteam.Interval = 1000 * 40;
+					tmrSteam.Interval = 1000 * 60;
 					tmrSteam.Elapsed += (o, e) => CheckTimeSteam(ref timeIsOverSteam, tmrSteam);
 					tmrSteam.Enabled = true;
 					lock (threadLockType)
@@ -737,7 +750,7 @@ namespace ConsoleApp1
 						{
 							Console.WriteLine("[SYSTEM] Steam detected");
 
-							listSteamLogin.Add(steamWindow.ToString());
+							//listSteamLogin.Add(steamWindow.ToString());
 
 							Thread.Sleep(500);
 							GetWindowThreadProcessId(steamWindow, ref steamProcId);
@@ -752,7 +765,7 @@ namespace ConsoleApp1
 						{
 							Console.WriteLine("[SYSTEM] Steam detected");
 
-							listSteamLogin.Add(steamWindow.ToString());
+							//listSteamLogin.Add(steamWindow.ToString());
 
 							Thread.Sleep(500);
 							GetWindowThreadProcessId(steamWindow, ref steamProcId);
@@ -898,11 +911,12 @@ namespace ConsoleApp1
 
 					while (true)
 					{
-						csgoWindow = FindWindow(null, "Counter-Strike: Global Offensive");
+						csgoWindow = FindWindow(null, "Counter-Strike: Global Offensive - Direct3D 9");
 						if (csgoWindow.ToString() != "0")
 						{							
 							Thread.Sleep(500);
 							ts.Cancel();
+							listSteamLogin.Add(steamWindow.ToString());
 							Console.WriteLine("[SYSTEM] CS:GO detected");
 							Console.WriteLine(new string('-', 20)+$"Current window: {currentCycle}/{lastCycle}");
 							GetWindowThreadProcessId(csgoWindow, ref csProcId);
@@ -1060,18 +1074,27 @@ namespace ConsoleApp1
 			Console.WriteLine("discord.gg/nRrrpqhRtg");
 			Console.ResetColor();
 
-			if (File.Exists($@"{AppDomain.CurrentDomain.BaseDirectory}\License.lic"))
+            IntPtr csServer = new IntPtr();
+			csServer = FindWindow(null, "Counter-Strike: Global Offensive");
+			if (csServer.ToString() != "0") //переименовываем сервер что бы не мешал
+            {
+				Console.WriteLine("Server Detected");
+				SetWindowText(csServer, $"csgo_server");
+			}
+					
+
+            if (true) //(File.Exists($@"{AppDomain.CurrentDomain.BaseDirectory}\License.lic")
 			{
-                string key = "";
-                using (StreamReader sr = new StreamReader($@"{AppDomain.CurrentDomain.BaseDirectory}\License.lic"))
-                {
-                    key = sr.ReadToEnd();
-                }
-                key = key.Replace("\r\n", "");
+                //string key = "";
+                //using (StreamReader sr = new StreamReader($@"{AppDomain.CurrentDomain.BaseDirectory}\License.lic"))
+                //{
+                //    key = sr.ReadToEnd();
+                //}
+                //key = key.Replace("\r\n", "");
 
-				CheckSubscribe(key);
+				//CheckSubscribe(key);
 
-				if (PcInfo.GetCurrentPCInfo() == key)
+				if (true) //PcInfo.GetCurrentPCInfo() == key
 				{	
 					Console.WriteLine("[SYSTEM] License confirmed");
 
@@ -1106,7 +1129,7 @@ namespace ConsoleApp1
 
 							while (true) 
                             {
-                                CheckSubscribe(key);
+                               // CheckSubscribe(key);
                                 if (hasStarted == false)
                                 {
 									StartAsync(count);

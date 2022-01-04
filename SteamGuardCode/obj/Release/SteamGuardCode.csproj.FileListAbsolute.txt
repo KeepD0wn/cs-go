@@ -1,4 +1,3 @@
-C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\obj\Release\SteamGuardCode.csprojAssemblyReference.cache
 C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\obj\Release\SteamGuardCode.csproj.CoreCompileInputs.cache
 C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Release\SteamGuardCode.exe.config
 C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Release\SteamGuardCode.exe
@@ -35,3 +34,4 @@ C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Release\System.Numeri
 C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Release\System.Runtime.CompilerServices.Unsafe.xml
 C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\obj\Release\SteamGuardCode.Properties.Resources.resources
 C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\obj\Release\SteamGuardCode.csproj.GenerateResource.cache
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\obj\Release\SteamGuardCode.csproj.AssemblyReference.cache
