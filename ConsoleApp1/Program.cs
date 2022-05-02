@@ -165,7 +165,7 @@ namespace ConsoleApp1
 
 		private static List<Process> listSteam = new List<Process>();
 
-		private static int timeIdle = 12600000; //205 минут 12600000;
+		private static int timeIdle = 12600000; //210 минут 12600000;
 
 		private static int consoleX = 380;
 		
@@ -202,7 +202,7 @@ namespace ConsoleApp1
 		private static void TmrEvent(object sender, ElapsedEventArgs e)
 		{
 			minToNewCycle -= timerDelayInMins;
-			Console.ForegroundColor = ConsoleColor.DarkGreen; // устанавливаем цвет	
+			Console.ForegroundColor = ConsoleColor.Green; // устанавливаем цвет	
 			Console.WriteLine($"[SYSTEM] New cycle after: {minToNewCycle} minutes" +"   "); //пробелы что бы инфа от старой строки не осталось, но не слишком много, а то заедет некст строка		
 			Console.ResetColor(); // сбрасываем в стандартный
 
@@ -343,22 +343,22 @@ namespace ConsoleApp1
 				yOffset += ySize;
 			}
 			xOffset = xSize * windowInARow;
-           
-			if (xOffsetMonitor==0 && yOffsetMonitor == 0)
-            {
-				minToNewCycle = timeIdle / 60000;
-				tmr.Enabled = true;
 
-				Console.ForegroundColor = ConsoleColor.Green; // устанавливаем цвет		
-				Console.WriteLine("[SYSTEM] New cycle");
-				Console.ResetColor(); // сбрасываем в стандартный
+            if (xOffsetMonitor == 0 && yOffsetMonitor == 0)
+            {				
+                minToNewCycle = (timeIdle + 120000)  / 60000; //120 сек на открытие кски и ввод строки подключения, потому что после ввода толко начинается отсчёт idletime
+                tmr.Enabled = true;
 
-				Console.ForegroundColor = ConsoleColor.Green;  //3 строки - должно быть не тут
-				Console.WriteLine($"[SYSTEM] New cycle after: {minToNewCycle} minutes" + "   "); //что бы показывало время сразу, а не через минуту
-				Console.ResetColor();
+                Console.ForegroundColor = ConsoleColor.Green; // устанавливаем цвет		
+                Console.WriteLine("[SYSTEM] New cycle");
+                Console.ResetColor(); // сбрасываем в стандартный
 
-			}
-			await Task.Run(() => SetCsgoPos(csgoWindow, xOffsetMonitor, yOffsetMonitor,login));
+                Console.ForegroundColor = ConsoleColor.Green;  //3 строки - должно быть не тут
+                Console.WriteLine($"[SYSTEM] New cycle after: {minToNewCycle} minutes" + "   "); //что бы показывало время сразу, а не через минуту
+                Console.ResetColor();
+
+            }
+            await Task.Run(() => SetCsgoPos(csgoWindow, xOffsetMonitor, yOffsetMonitor,login));
 		}
 
 		private static void TypeInCsgo(Process steamProc, string login, int accid, IntPtr console, int xOff, int yOff)
@@ -1086,7 +1086,7 @@ namespace ConsoleApp1
 			SetForegroundWindow(conWindow);
 
 			Console.ForegroundColor = ConsoleColor.Red;
-			Console.WriteLine("IDLE MACHINE v1.7.2");
+			Console.WriteLine("IDLE MACHINE v1.9.1");
 			Console.WriteLine("discord.gg/nRrrpqhRtg");
 			Console.ResetColor();
 
@@ -1153,23 +1153,10 @@ namespace ConsoleApp1
 								}                               
 
                                 cycleCount += 1;
-								//Console.WriteLine($"[SYSTEM] Current cycle №{cycleCount}"); //1 сторка - должно быть не тут
-								//tmr.Enabled = true;
-
-								//Console.ForegroundColor = ConsoleColor.DarkGreen;  //3 строки - должно быть не тут
-								//Console.WriteLine($"[SYSTEM] New cycle after: {minToNewCycle} minutes" + "   "); //что бы показывало время сразу, а не через минуту
-								//Console.ResetColor();
 
 								//тут асинхронность, которая открывает кс если что
 
 								Thread.Sleep(timeIdle);
-								//4 строки - должно быть не тут
-								//Console.ForegroundColor = ConsoleColor.Green; // устанавливаем цвет		
-								//Console.WriteLine();
-								//Console.WriteLine("[SYSTEM] New cycle");
-								//Console.ResetColor(); // сбрасываем в стандартный
-
-								//minToNewCycle = timeIdle / 60000;
 								windowInARow = 0;
 								windowCount = 0;
 								xOffset = 0;
