@@ -246,9 +246,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ConsoleApp1\ConsoleApp1.csproj">
+    <ProjectReference Include="..\ConsoleApp1\IdleMachine.csproj">
       <Project>{2ba1701c-f775-4188-ae0d-53d7d48c8c39}</Project>
-      <Name>ConsoleApp1</Name>
+      <Name>IdleMachine</Name>
     </ProjectReference>
     <ProjectReference Include="..\SteamAuth-master\SteamAuth\SteamAuth.csproj">
       <Project>{5ad0934e-f6c4-4ae5-83af-c788313b2a87}</Project>

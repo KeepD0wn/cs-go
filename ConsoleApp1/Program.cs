@@ -281,12 +281,13 @@ namespace ConsoleApp1
 					throw new Exception("Abort");
 				}
 			}
-
-			IntPtr steamWarning = FindWindow(null, "Steam-Warning"); //тут убрали пробелы, тк он не детектит
+						
+			IntPtr steamWarning = FindWindow(null, "Steam - Warning"); //тут убрали пробелы, тк он не детектит
 			if (steamWarning.ToString() != "0")
 			{
 				Console.WriteLine("[SYSTEM] Steam Warning");
 				Console.WriteLine(new string('-', 35));
+				
 				//try
 				//{
 				//	listSteamLogin.Remove(steamProc.MainWindowHandle.ToString());
@@ -332,7 +333,7 @@ namespace ConsoleApp1
 			SetWindowPos(csgoWindow, IntPtr.Zero, xOffset, yOffset, xSize, ySize,SWP_NOSIZE | SWP_NOZORDER); //пусть сам выставляет свои 300 по высоте
 		}
 
-		private static async Task SetCsgoPosAsync(IntPtr csgoWindow, int xOffset1, int yOffset1, string login)
+		private static async Task SetCsgoPosAsync(IntPtr csgoWindow, int xOffsetMonitor, int yOffsetMonitor, string login)
 		{
 			windowCount += 1;
 			windowInARow += 1;
@@ -342,7 +343,22 @@ namespace ConsoleApp1
 				yOffset += ySize;
 			}
 			xOffset = xSize * windowInARow;
-			await Task.Run(() => SetCsgoPos(csgoWindow, xOffset1, yOffset1,login));
+           
+			if (xOffsetMonitor==0 && yOffsetMonitor == 0)
+            {
+				minToNewCycle = timeIdle / 60000;
+				tmr.Enabled = true;
+
+				Console.ForegroundColor = ConsoleColor.Green; // устанавливаем цвет		
+				Console.WriteLine("[SYSTEM] New cycle");
+				Console.ResetColor(); // сбрасываем в стандартный
+
+				Console.ForegroundColor = ConsoleColor.Green;  //3 строки - должно быть не тут
+				Console.WriteLine($"[SYSTEM] New cycle after: {minToNewCycle} minutes" + "   "); //что бы показывало время сразу, а не через минуту
+				Console.ResetColor();
+
+			}
+			await Task.Run(() => SetCsgoPos(csgoWindow, xOffsetMonitor, yOffsetMonitor,login));
 		}
 
 		private static void TypeInCsgo(Process steamProc, string login, int accid, IntPtr console, int xOff, int yOff)
@@ -486,7 +502,7 @@ namespace ConsoleApp1
                 {
 					csgoProc.Kill();
 					//listCsgo.Remove(csgoProc);
-					Thread.Sleep(2000);
+					Thread.Sleep(1000*15); //15 сек на синхронизацию
 				}
                 catch
 				{
@@ -665,7 +681,7 @@ namespace ConsoleApp1
 					if(exceptionsInARow!=0)
 					Console.WriteLine($"Exceptions in a row: {exceptionsInARow}");
 
-					if (exceptionsInARow >= 3)
+					if (exceptionsInARow >= 2)
 					{
 						try
 						{
@@ -673,7 +689,7 @@ namespace ConsoleApp1
 							conn.Open();
 							var com1 = new MySqlCommand("USE csgo; " +
 							"Update accounts set canPlayDate = @canPlayDate where id = @id", conn);
-							com1.Parameters.AddWithValue("@canPlayDate", date.AddMinutes(10));
+							com1.Parameters.AddWithValue("@canPlayDate", date.AddHours(2));
 							com1.Parameters.AddWithValue("@id", accid);
 							com1.ExecuteNonQuery();
 							conn.Close();
@@ -728,7 +744,7 @@ namespace ConsoleApp1
                     process.StartInfo = processStartInfo;
 					process.Start();
 
-					IntPtr steamWindow = new IntPtr();
+					IntPtr steamWindowLogin = new IntPtr();
 					IntPtr csgoWindow = new IntPtr();
 					IntPtr steamGuardWindow = new IntPtr();
 					IntPtr console = FindWindow(null, "CSGO_IDLE_MACHINE");
@@ -745,30 +761,30 @@ namespace ConsoleApp1
 
 					while (true)
 					{
-						steamWindow = FindWindow(null, "Вход в Steam");
-						if (steamWindow.ToString() != "0" && !listSteamLogin.Contains(steamWindow.ToString())) //ищем стим, которого не было
+						steamWindowLogin = FindWindow(null, "Вход в Steam");
+						if (steamWindowLogin.ToString() != "0" && !listSteamLogin.Contains(steamWindowLogin.ToString())) //ищем стим, которого не было
 						{
 							Console.WriteLine("[SYSTEM] Steam detected");
 
 							//listSteamLogin.Add(steamWindow.ToString());
 
 							Thread.Sleep(500);
-							GetWindowThreadProcessId(steamWindow, ref steamProcId);
+							GetWindowThreadProcessId(steamWindowLogin, ref steamProcId);
 							steamProc = Process.GetProcessById(steamProcId);
 							//listSteam.Add(steamProc);
 							SetWindowText(steamProc.MainWindowHandle, $"steam_{login}");
 							break;
 						}
 
-						steamWindow = FindWindow(null, "Steam Login");
-						if (steamWindow.ToString() != "0" && !listSteamLogin.Contains(steamWindow.ToString()))
+						steamWindowLogin = FindWindow(null, "Steam Login");
+						if (steamWindowLogin.ToString() != "0" && !listSteamLogin.Contains(steamWindowLogin.ToString()))
 						{
 							Console.WriteLine("[SYSTEM] Steam detected");
 
 							//listSteamLogin.Add(steamWindow.ToString());
 
 							Thread.Sleep(500);
-							GetWindowThreadProcessId(steamWindow, ref steamProcId);
+							GetWindowThreadProcessId(steamWindowLogin, ref steamProcId);
 							steamProc = Process.GetProcessById(steamProcId);
 							//listSteam.Add(steamProc);
 							SetWindowText(steamProc.MainWindowHandle, $"steam_{login}");
@@ -785,7 +801,7 @@ namespace ConsoleApp1
 							try
 							{ //TODO: узнать тот ли стим убивает
 								int x = 0;
-								GetWindowThreadProcessId(steamWindow, ref x);
+								GetWindowThreadProcessId(steamWindowLogin, ref x);
 								Process steamProcS = Process.GetProcessById(x);
 								//listSteamLogin.Remove(steamProcS.MainWindowHandle.ToString());
 								Console.WriteLine("[911] Error");
@@ -846,7 +862,7 @@ namespace ConsoleApp1
 						//}
 						//catch { }
 
-						steamProc.Kill(); //процесс подвисает на время загрузки гварда, никак не убить
+						steamProc.Kill(); // если процесс подвисает на время загрузки гварда, никак не убить
 						//listSteam.Remove(steamProc);
 						Console.WriteLine("[SYSTEM] No steam Guard detected №2");
 						exceptionsInARow += 1;
@@ -916,7 +932,7 @@ namespace ConsoleApp1
 						{							
 							Thread.Sleep(500);
 							ts.Cancel();
-							listSteamLogin.Add(steamWindow.ToString());
+							listSteamLogin.Add(steamWindowLogin.ToString());
 							Console.WriteLine("[SYSTEM] CS:GO detected");
 							Console.WriteLine(new string('-', 20)+$"Current window: {currentCycle}/{lastCycle}");
 							GetWindowThreadProcessId(csgoWindow, ref csProcId);
@@ -1137,22 +1153,23 @@ namespace ConsoleApp1
 								}                               
 
                                 cycleCount += 1;
-								Console.WriteLine($"[SYSTEM] Current cycle №{cycleCount}");
-								tmr.Enabled = true;
+								//Console.WriteLine($"[SYSTEM] Current cycle №{cycleCount}"); //1 сторка - должно быть не тут
+								//tmr.Enabled = true;
 
-								Console.ForegroundColor = ConsoleColor.DarkGreen;
-								Console.WriteLine($"[SYSTEM] New cycle after: {minToNewCycle} minutes" + "   "); //что бы показывало время сразу, а не через минуту
-								Console.ResetColor();
+								//Console.ForegroundColor = ConsoleColor.DarkGreen;  //3 строки - должно быть не тут
+								//Console.WriteLine($"[SYSTEM] New cycle after: {minToNewCycle} minutes" + "   "); //что бы показывало время сразу, а не через минуту
+								//Console.ResetColor();
 
 								//тут асинхронность, которая открывает кс если что
 
-								Thread.Sleep(timeIdle); 
-								Console.ForegroundColor = ConsoleColor.Green; // устанавливаем цвет		
-								Console.WriteLine();
-								Console.WriteLine("[SYSTEM] New cycle");
-								Console.ResetColor(); // сбрасываем в стандартный
+								Thread.Sleep(timeIdle);
+								//4 строки - должно быть не тут
+								//Console.ForegroundColor = ConsoleColor.Green; // устанавливаем цвет		
+								//Console.WriteLine();
+								//Console.WriteLine("[SYSTEM] New cycle");
+								//Console.ResetColor(); // сбрасываем в стандартный
 
-								minToNewCycle = timeIdle / 60000;
+								//minToNewCycle = timeIdle / 60000;
 								windowInARow = 0;
 								windowCount = 0;
 								xOffset = 0;

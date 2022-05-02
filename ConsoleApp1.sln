@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{2BA1701C-F775-4188-AE0D-53D7D48C8C39}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdleMachine", "ConsoleApp1\IdleMachine.csproj", "{2BA1701C-F775-4188-AE0D-53D7D48C8C39}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp3", "ConsoleApp3\ConsoleApp3.csproj", "{60CECC82-4204-493F-A47D-B6B090D25CC0}"
 EndProject

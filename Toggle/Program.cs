@@ -36,15 +36,17 @@ namespace Toggle
                                           select pr)
             {
                 processCS.Kill();
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
             }
+
+            Thread.Sleep(15000);
 
             foreach (Process processSteam in from pr in Process.GetProcesses()
                                              where pr.ProcessName == "steam"
                                              select pr)
             {
                 processSteam.Kill();
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
             }
         }
 

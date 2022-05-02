@@ -33,9 +33,14 @@ C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Release\System.Diagnosti
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Release\System.Memory.xml
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Release\System.Numerics.Vectors.xml
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Release\System.Runtime.CompilerServices.Unsafe.xml
-C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Release\ConsoleApp1.csproj.CopyComplete
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Release\ConsoleApp1.exe
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Release\ConsoleApp1.pdb
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Release\ConsoleApp1.Properties.Resources.resources
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Release\ConsoleApp1.csproj.GenerateResource.cache
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Release\ConsoleApp1.csproj.AssemblyReference.cache
+C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Release\ConsoleApp1.exe.manifest
+C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Release\ConsoleApp1.application
+C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Release\ConsoleApp1.TrustInfo.xml
+C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Release\ConsoleApp1.exe.manifest
+C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Release\ConsoleApp1.application
+C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Release\ConsoleApp1.csproj.CopyComplete
