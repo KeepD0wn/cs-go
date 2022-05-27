@@ -388,14 +388,15 @@ namespace ConsoleApp1
 					mouse_event(MOUSEEVENTF_LEFTUP, (uint)x, (uint)y, 0, 0);
 				
 					//тут уже вписывает коннект в консоль
-					Thread.Sleep(500);
-					string setSize = $"mat_setvideomode {xSize} {ySize} 1";
-					foreach (char ch in setSize)
-					{
-						PostMessage(csgoWin, wmChar, ch, 0);
-						Thread.Sleep(50);
-					}
-					PostMessage(csgoWin, WM_KEYDOWN, VK_ENTER, 1);
+					// пока в комент, тк научился менять конфиг и уже не нужно
+					//Thread.Sleep(500);
+					//string setSize = $"mat_setvideomode {xSize} {ySize} 1";
+					//foreach (char ch in setSize)
+					//{
+					//	PostMessage(csgoWin, wmChar, ch, 0);
+					//	Thread.Sleep(50);
+					//}
+					//PostMessage(csgoWin, WM_KEYDOWN, VK_ENTER, 1);
 
 					Thread.Sleep(500);
 					langToEn();
@@ -531,7 +532,7 @@ namespace ConsoleApp1
 							conn.Open();
 							var com = new MySqlCommand("USE csgo; " +
 							"Update accounts set canPlayDate = @canPlayDate where id = @id", conn);
-							com.Parameters.AddWithValue("@canPlayDate", date.AddDays(7));
+							com.Parameters.AddWithValue("@canPlayDate", date.AddDays(6).AddHours(20).AddMinutes(40));
 							com.Parameters.AddWithValue("@id", accid);
 							com.ExecuteNonQuery();
 
@@ -877,10 +878,11 @@ namespace ConsoleApp1
 						while (true)
 						{
 							IntPtr cs = FindWindow(null, "Updating Counter-Strike: Global Offensive");
-							if (cs.ToString() != "0")
+							IntPtr updError = FindWindow(null, "Steam - Error"); //возникает если обнова была супер быстрая и уже скачалась до того как мы начали её детектить 
+							if (cs.ToString() != "0" || updError.ToString() !="0")
 							{
 								updatingWasFound = true;
-								//Console.WriteLine("[SYSTEM] Updating...");
+								Console.WriteLine("[SYSTEM] Updating...");
 								//Thread.Sleep(5000);			
 
 								IntPtr toggle = FindWindow(null, "Toggle"); 
@@ -889,8 +891,9 @@ namespace ConsoleApp1
 									Process processTog = new Process();
 									ProcessStartInfo processStartInfoTog = new ProcessStartInfo();
 
-									processStartInfoTog.WindowStyle = ProcessWindowStyle.Hidden;
+									processStartInfoTog.WindowStyle = ProcessWindowStyle.Minimized;
 									processStartInfoTog.FileName = "cmd.exe";
+									processStartInfo.UseShellExecute = true;
 									processStartInfoTog.Arguments = string.Format("/C \"{0}\" {1}", new object[]
 									{
 										$@"{AppDomain.CurrentDomain.BaseDirectory}\Toggle.exe",

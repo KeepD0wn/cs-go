@@ -1,0 +1,15 @@
+C:\Users\gvozd\source\repos\ConsoleApp1\CreateWindowNamed\bin\Release\net5.0\CreateWindowNamed.exe
+C:\Users\gvozd\source\repos\ConsoleApp1\CreateWindowNamed\bin\Release\net5.0\CreateWindowNamed.deps.json
+C:\Users\gvozd\source\repos\ConsoleApp1\CreateWindowNamed\bin\Release\net5.0\CreateWindowNamed.runtimeconfig.json
+C:\Users\gvozd\source\repos\ConsoleApp1\CreateWindowNamed\bin\Release\net5.0\CreateWindowNamed.runtimeconfig.dev.json
+C:\Users\gvozd\source\repos\ConsoleApp1\CreateWindowNamed\bin\Release\net5.0\CreateWindowNamed.dll
+C:\Users\gvozd\source\repos\ConsoleApp1\CreateWindowNamed\bin\Release\net5.0\ref\CreateWindowNamed.dll
+C:\Users\gvozd\source\repos\ConsoleApp1\CreateWindowNamed\bin\Release\net5.0\CreateWindowNamed.pdb
+C:\Users\gvozd\source\repos\ConsoleApp1\CreateWindowNamed\obj\Release\net5.0\CreateWindowNamed.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\gvozd\source\repos\ConsoleApp1\CreateWindowNamed\obj\Release\net5.0\CreateWindowNamed.AssemblyInfoInputs.cache
+C:\Users\gvozd\source\repos\ConsoleApp1\CreateWindowNamed\obj\Release\net5.0\CreateWindowNamed.AssemblyInfo.cs
+C:\Users\gvozd\source\repos\ConsoleApp1\CreateWindowNamed\obj\Release\net5.0\CreateWindowNamed.csproj.CoreCompileInputs.cache
+C:\Users\gvozd\source\repos\ConsoleApp1\CreateWindowNamed\obj\Release\net5.0\CreateWindowNamed.dll
+C:\Users\gvozd\source\repos\ConsoleApp1\CreateWindowNamed\obj\Release\net5.0\ref\CreateWindowNamed.dll
+C:\Users\gvozd\source\repos\ConsoleApp1\CreateWindowNamed\obj\Release\net5.0\CreateWindowNamed.pdb
+C:\Users\gvozd\source\repos\ConsoleApp1\CreateWindowNamed\obj\Release\net5.0\CreateWindowNamed.genruntimeconfig.cache

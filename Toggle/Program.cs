@@ -16,6 +16,9 @@ namespace Toggle
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         static extern bool SetCursorPos(int x, int y);
 
+        [DllImport("User32.dll")]
+        public static extern bool SetWindowText(IntPtr hwnd, string title);
+
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.StdCall)]
         public static extern void mouse_event(uint dwFlags, uint dx, uint dy, uint cButtons, uint dwExtraInfo);
 
@@ -29,6 +32,9 @@ namespace Toggle
         [DllImport("user32.dll")]
         public static extern UInt32 GetWindowThreadProcessId(IntPtr hwnd, ref Int32 pid);
 
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
         private static void CloseAllProcess()
         {
             foreach (Process processCS in from pr in Process.GetProcesses()
@@ -36,7 +42,7 @@ namespace Toggle
                                           select pr)
             {
                 processCS.Kill();
-                Thread.Sleep(500);
+                Thread.Sleep(1000);
             }
 
             Thread.Sleep(15000);
@@ -46,8 +52,9 @@ namespace Toggle
                                              select pr)
             {
                 processSteam.Kill();
-                Thread.Sleep(500);
+                Thread.Sleep(1000);
             }
+            Thread.Sleep(15000);
         }
 
         /// <summary>
@@ -56,7 +63,9 @@ namespace Toggle
         /// <param name="count"></param>
         public static void StartCS(int count)
         {
+            Thread.Sleep(10000);
             CloseAllProcess();
+            Thread.Sleep(10000);
 
             string textFromFile = "";
             using (FileStream fstream = File.OpenRead($@"{AppDomain.CurrentDomain.BaseDirectory}\position.txt"))
@@ -83,16 +92,19 @@ namespace Toggle
             mouse_event(MOUSEEVENTF_LEFTDOWN, (uint)xCs, (uint)yCs, 0, 0);
             mouse_event(MOUSEEVENTF_LEFTUP, (uint)xCs, (uint)yCs, 0, 0);
 
+            Thread.Sleep(500);
             SendKeys.SendWait("{+}+{F10}");
+            Thread.Sleep(1000);
 
             for (int i = 0; i < 10; i++)
             {
                 SendKeys.SendWait("{UP}");
-                Thread.Sleep(50);
+                Thread.Sleep(200);
             }
+            Thread.Sleep(200);
             SendKeys.SendWait("{ENTER}");
 
-            Thread.Sleep(5000);
+            Thread.Sleep(1000);
             Process.Start("CSGO IDLE MACHINE.exe", count.ToString());
         }
 
@@ -147,9 +159,132 @@ namespace Toggle
             }
         }
 
+        public static void UpdateServer()
+        {
+            Process processServerUpd = new Process();
+            ProcessStartInfo processStartInfo = new ProcessStartInfo();
+
+            processStartInfo.WindowStyle = ProcessWindowStyle.Normal;
+            processStartInfo.FileName = "cmd.exe";
+            processStartInfo.UseShellExecute = true;
+            processStartInfo.Arguments = string.Format("/C \"{0}\"", new object[]
+            {
+                                        $@"C:\Users\{Environment.UserName}\Desktop\update_csgo.lnk"
+            });
+
+            processServerUpd.StartInfo = processStartInfo;
+            processServerUpd.Start();
+            Thread.Sleep(1000); //100мс хватает, но поставлю с запасом
+            SetWindowText(processServerUpd.MainWindowHandle, "update_csgo");
+            Thread.Sleep(100);
+
+            bool updStarted = false;
+            IntPtr updCS = FindWindow(null, "update_csgo");
+            DateTime now = DateTime.Now;
+            while (now.AddSeconds(10) > DateTime.Now)
+            {
+                if (updCS.ToString() != "0")
+                {
+                    updStarted = true;
+                    break;
+                }
+            }
+            Thread.Sleep(1000);
+
+            if (updStarted == true)
+            {
+                while (true)
+                {
+                    IntPtr updCSEnd = FindWindow(null, "update_csgo");
+                    if (updCSEnd.ToString() == "0")
+                    {
+                        break;
+                    }
+                    Thread.Sleep(1000);
+                }
+            }
+            Thread.Sleep(1000);
+        }
+        public static void StartServer()
+        {
+            Process processServerUpd = new Process();
+            ProcessStartInfo processStartInfo = new ProcessStartInfo();
+
+            processStartInfo.WindowStyle = ProcessWindowStyle.Minimized;
+            processStartInfo.FileName = "cmd.exe";
+            processStartInfo.UseShellExecute = true;
+            processStartInfo.Arguments = string.Format("/C \"{0}\"", new object[]
+            {
+                                        $@"C:\Users\{Environment.UserName}\Desktop\start_server.lnk"
+            });
+
+            processServerUpd.StartInfo = processStartInfo;
+            processServerUpd.Start();
+            Thread.Sleep(1000); //100мс хватает, но поставлю с запасом
+            SetWindowText(processServerUpd.MainWindowHandle, "start_server");
+            Thread.Sleep(100);
+
+            bool serverStarted = false;
+            IntPtr server = FindWindow(null, "start_server");
+            DateTime now = DateTime.Now;
+            while (now.AddSeconds(10) > DateTime.Now)
+            {
+                if (server.ToString() != "0")
+                {
+                    serverStarted = true;
+                    break;
+                }
+            }
+            Thread.Sleep(1000);
+
+            if (serverStarted == true)
+            {
+                while (true)
+                {
+                    IntPtr mainServer = FindWindow(null, "Counter-Strike: Global Offensive");
+                    if (mainServer.ToString() != "0")
+                    {
+                        Thread.Sleep(10000);
+                        ShowWindow(mainServer, 6);
+                        break;
+                    }
+                    Thread.Sleep(1000);
+                }
+            }
+        }
+
+        public static void CloseOldServer()
+        {
+            try
+            {
+                while (FindWindow(null, "start_server").ToString() != "0")
+                {
+                    int idleInt = 0;
+                    GetWindowThreadProcessId(FindWindow(null, "start_server"), ref idleInt);
+                    Process idleProc = Process.GetProcessById(idleInt);                    
+                    idleProc.Kill();                   
+                }
+            }
+            catch { }
+
+            try
+            {
+                while (FindWindow(null, "csgo_server").ToString() != "0")
+                {
+                    int idleInt = 0;
+                    GetWindowThreadProcessId(FindWindow(null, "csgo_server"), ref idleInt);
+                    Process idleProc = Process.GetProcessById(idleInt);
+                    idleProc.Kill();
+                }
+            }
+            catch { }
+            Thread.Sleep(1000);
+        }
+
         static void Main(string[] args)
         {
             Console.Title = "Toggle";
+            CloseOldServer();
             StartCS(1);
             int countDone = 0;
             try
@@ -190,6 +325,19 @@ namespace Toggle
                     string kuda = @"C:\Program Files (x86)\Steam\steamapps\common\Counter-Strike Global Offensive\csgo\panorama\videos";
                     Directory.Delete(kuda, true); //true - если директория не пуста удаляем все ее содержимое
                     CopyDirectory(new DirectoryInfo(directoria), new DirectoryInfo(kuda));
+
+                    try
+                    {
+                        Console.WriteLine("Started server update");
+                        UpdateServer();
+                    }
+                    catch { }
+                    try
+                    {
+                        Console.WriteLine("Start server");
+                        StartServer();
+                    }
+                    catch { }    
 
                     StartCS(countDone); //тут сразу открывается новый идл машин, а старый не успевает подождатьь 2 минуты
                     break;
