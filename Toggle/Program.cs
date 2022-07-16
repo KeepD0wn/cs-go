@@ -42,19 +42,18 @@ namespace Toggle
                                           select pr)
             {
                 processCS.Kill();
-                Thread.Sleep(1000);
+                LogAsync(processCS.MainWindowTitle + " csgo killed");
+                Thread.Sleep(15000);
             }
-
-            Thread.Sleep(15000);
 
             foreach (Process processSteam in from pr in Process.GetProcesses()
                                              where pr.ProcessName == "steam"
                                              select pr)
             {
                 processSteam.Kill();
-                Thread.Sleep(1000);
+                LogAsync(processSteam.MainWindowTitle + " steam killed");
+                Thread.Sleep(15000);
             }
-            Thread.Sleep(15000);
         }
 
         /// <summary>
@@ -63,7 +62,7 @@ namespace Toggle
         /// <param name="count"></param>
         public static void StartCS(int count)
         {
-            Thread.Sleep(10000);
+            Thread.Sleep(60000);
             CloseAllProcess();
             Thread.Sleep(10000);
 
@@ -103,9 +102,11 @@ namespace Toggle
             }
             Thread.Sleep(200);
             SendKeys.SendWait("{ENTER}");
+            LogAsync("toggled sandbox");
 
             Thread.Sleep(1000);
             Process.Start("CSGO IDLE MACHINE.exe", count.ToString());
+            LogAsync($"start idle machine({count})");
         }
 
         static bool updatingWasFound = false;
@@ -262,10 +263,14 @@ namespace Toggle
                     int idleInt = 0;
                     GetWindowThreadProcessId(FindWindow(null, "start_server"), ref idleInt);
                     Process idleProc = Process.GetProcessById(idleInt);                    
-                    idleProc.Kill();                   
+                    idleProc.Kill();
+                    LogAsync("Old start window server killed");
                 }
             }
-            catch { }
+            catch 
+            {
+                LogAsync("Exception while old start server killing");
+            }
 
             try
             {
@@ -275,10 +280,52 @@ namespace Toggle
                     GetWindowThreadProcessId(FindWindow(null, "csgo_server"), ref idleInt);
                     Process idleProc = Process.GetProcessById(idleInt);
                     idleProc.Kill();
+                    LogAsync("Old server killed");
+                }
+            }
+            catch
+            {
+                LogAsync("Exception while old server killing");
+            }
+            Thread.Sleep(1000);
+        }
+
+        private static object logLocker = new object();
+
+        private static void Log(string message)
+        {
+            try
+            {
+                lock (logLocker)
+                {
+                    try
+                    {
+                        StreamWriter connObj = new StreamWriter("log.txt", true);
+                        connObj.WriteLine("[Toggle] " + message + " " + DateTime.Now);
+                        connObj.Close();
+                    }
+                    catch
+                    {
+                        Thread.Sleep(1000);
+                        StreamWriter connObj = new StreamWriter("log.txt", true);
+                        connObj.WriteLine("[Toggle] "+message + " " + DateTime.Now);
+                        connObj.Close();
+                    }
+                   
                 }
             }
             catch { }
-            Thread.Sleep(1000);
+        }
+
+        private static async Task LogAsync(string message)
+        {
+            await Task.Run(() => Log(message));
+        }
+
+        private static async Task LogAndConsoleWritelineAsync(string message)
+        {
+            Console.WriteLine(message);
+            await Task.Run(() => Log(message));
         }
 
         static void Main(string[] args)
@@ -300,10 +347,12 @@ namespace Toggle
             while (true)
             {
                 IntPtr ready = FindWindow(null, $"Ready - Counter-Strike: Global Offensive");
-               // IntPtr ready = FindWindow(null, "Updating Counter-Strike: Global Offensive");
-                if (ready.ToString() != "0")
+                IntPtr csgoWindow = FindWindow(null, "Counter-Strike: Global Offensive - Direct3D 9");
+                LogAsync("waiting cs ready window");
+                if (ready.ToString() != "0" || csgoWindow.ToString() != "0")
                 {
                     Thread.Sleep(5000);
+                    LogAsync("window cs ready or cs window found");
                     IntPtr idle = FindWindow(null, "CSGO_IDLE_MACHINE");
                     if (idle.ToString() != "0")
                     {
@@ -313,8 +362,9 @@ namespace Toggle
                         try
                         {
                             idleProc.Kill();
+                            LogAsync("idle machine killed");
                         }
-                        catch { }
+                        catch { LogAsync("exception while idle machine killing"); }
                     }
                     Thread.Sleep(5000);
 
@@ -325,15 +375,18 @@ namespace Toggle
                     string kuda = @"C:\Program Files (x86)\Steam\steamapps\common\Counter-Strike Global Offensive\csgo\panorama\videos";
                     Directory.Delete(kuda, true); //true - если директория не пуста удаляем все ее содержимое
                     CopyDirectory(new DirectoryInfo(directoria), new DirectoryInfo(kuda));
+                    LogAsync("panorama files changed");
 
                     try
                     {
+                        LogAsync("Started server update");
                         Console.WriteLine("Started server update");
                         UpdateServer();
                     }
                     catch { }
                     try
                     {
+                        LogAsync("Start server");
                         Console.WriteLine("Start server");
                         StartServer();
                     }

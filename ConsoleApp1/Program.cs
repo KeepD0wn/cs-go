@@ -53,6 +53,33 @@ namespace ConsoleApp1
 
 		private static object connObj = new object();
 
+		private static object logLocker = new object();
+
+		private static void Log(string message)
+		{
+            try
+            {
+				lock (logLocker)
+				{
+					StreamWriter connObj = new StreamWriter("log.txt", true);
+					connObj.WriteLine(message + " " + DateTime.Now);
+					connObj.Close();
+				}
+			}
+            catch { }			
+		}
+
+		private static async Task LogAsync(string message)
+		{
+			await Task.Run(() => Log(message));
+		}
+
+		private static async Task LogAndConsoleWritelineAsync(string message)
+		{
+			Console.WriteLine(message);
+			await Task.Run(() => Log(message));
+		}
+
 		private static void SetOnline(int isOnline, int id)
 		{
 			lock (connObj)
@@ -70,7 +97,7 @@ namespace ConsoleApp1
 				}
 				catch (Exception ex)
 				{
-					Console.WriteLine(ex.Message);
+					LogAndConsoleWritelineAsync(ex.Message);
 				}
 				finally
 				{
@@ -79,7 +106,7 @@ namespace ConsoleApp1
 			}
 		}
 
-		private static void langToEn()
+		private static void LangToEn()
 		{
 			string lang = "00000409";
 			int ret = LoadKeyboardLayout(lang, 1);
@@ -203,7 +230,7 @@ namespace ConsoleApp1
 		{
 			minToNewCycle -= timerDelayInMins;
 			Console.ForegroundColor = ConsoleColor.Green; // устанавливаем цвет	
-			Console.WriteLine($"[SYSTEM] New cycle after: {minToNewCycle} minutes" +"   "); //пробелы что бы инфа от старой строки не осталось, но не слишком много, а то заедет некст строка		
+			LogAndConsoleWritelineAsync($"[SYSTEM] New cycle after: {minToNewCycle} minutes" +"   "); //пробелы что бы инфа от старой строки не осталось, но не слишком много, а то заедет некст строка		
 			Console.ResetColor(); // сбрасываем в стандартный
 
 			if (minToNewCycle <= 1)
@@ -230,14 +257,14 @@ namespace ConsoleApp1
 			steamGuardWindow = FindWindow(null, "Steam Guard - Computer Authorization Required");
 			if (steamGuardWindow.ToString() != "0")
 			{
-				Console.WriteLine("[SYSTEM] Steam Guard detected");
+				LogAndConsoleWritelineAsync("[SYSTEM] Steam Guard detected");
 				return steamGuardWindow;
 			}
 
 			steamGuardWindow = FindWindow(null, "Steam Guard — Необходима авторизация компьютера");
 			if (steamGuardWindow.ToString() != "0")
 			{
-				Console.WriteLine("[SYSTEM] Steam Guard detected");
+				LogAndConsoleWritelineAsync("[SYSTEM] Steam Guard detected");
 				return steamGuardWindow;
 			}
 
@@ -260,8 +287,8 @@ namespace ConsoleApp1
 				IntPtr newGuard1 = FindGuard();
 				if (newGuard1.ToString() != "0")
 				{
-					Console.WriteLine("Steam Guard still on");
-					Console.WriteLine(new string('-', 35));
+					LogAndConsoleWritelineAsync("Steam Guard still on");
+					LogAndConsoleWritelineAsync(new string('-', 35));
 					//try
 					//{
 					//	listSteamLogin.Remove(steamProc.MainWindowHandle.ToString());
@@ -273,7 +300,7 @@ namespace ConsoleApp1
 					}
                     catch 
 					{
-						Console.WriteLine("[201][SYSTEM] Error");
+						LogAndConsoleWritelineAsync("[201][SYSTEM] Error");
 					}
 					//listSteam.Remove(steamProc);
 					exceptionsInARow += 1;
@@ -285,8 +312,8 @@ namespace ConsoleApp1
 			IntPtr steamWarning = FindWindow(null, "Steam - Warning"); //тут убрали пробелы, тк он не детектит
 			if (steamWarning.ToString() != "0")
 			{
-				Console.WriteLine("[SYSTEM] Steam Warning");
-				Console.WriteLine(new string('-', 35));
+				LogAndConsoleWritelineAsync("[SYSTEM] Steam Warning");
+				LogAndConsoleWritelineAsync(new string('-', 35));
 				
 				//try
 				//{
@@ -299,7 +326,7 @@ namespace ConsoleApp1
 				}
 				catch
 				{
-					Console.WriteLine("[202][SYSTEM] Error");
+					LogAndConsoleWritelineAsync("[202][SYSTEM] Error");
 				}
 				//listSteam.Remove(steamProc);
 				exceptionsInARow += 1;
@@ -350,11 +377,11 @@ namespace ConsoleApp1
                 tmr.Enabled = true;
 
                 Console.ForegroundColor = ConsoleColor.Green; // устанавливаем цвет		
-                Console.WriteLine("[SYSTEM] New cycle");
+				LogAndConsoleWritelineAsync("[SYSTEM] New cycle");
                 Console.ResetColor(); // сбрасываем в стандартный
 
                 Console.ForegroundColor = ConsoleColor.Green;  //3 строки - должно быть не тут
-                Console.WriteLine($"[SYSTEM] New cycle after: {minToNewCycle} minutes" + "   "); //что бы показывало время сразу, а не через минуту
+				LogAndConsoleWritelineAsync($"[SYSTEM] New cycle after: {minToNewCycle} minutes" + "   "); //что бы показывало время сразу, а не через минуту
                 Console.ResetColor();
 
             }
@@ -399,7 +426,7 @@ namespace ConsoleApp1
 					//PostMessage(csgoWin, WM_KEYDOWN, VK_ENTER, 1);
 
 					Thread.Sleep(500);
-					langToEn();
+					LangToEn();
 					foreach (char ch in serverConnectionString)
 					{
 						PostMessage(csgoWin, wmChar, ch, 0);
@@ -456,15 +483,15 @@ namespace ConsoleApp1
 					Color blueWin = GetColorAt(new Point(startX + 18, startY + 29));
 					if (blueWin.R >= 50 && blueWin.R <= 70 && blueWin.G >= 170 && blueWin.G <= 190 && blueWin.B >= 210 && blueWin.B <= 225) //если да, то в главном меню синяя полоска
 					{
-						Console.WriteLine("[144][SYSTEM][] Blue window");
+						LogAndConsoleWritelineAsync("[144][SYSTEM][] Blue window");
 					}
 					//тут элсе иф и проверка на вак по 190-0-0 ргб и х18у29
 					if (menu1.R == 233 && menu1.G == 233 && menu1.B == 233 && menu2.R == 204 && menu2.G == 204 && menu2.B == 204 && menu3.R == 169 && menu3.G == 169 && menu3.B == 169) //если подходит по цветам то в главном меню и без плашки бана, с неё всё становится темнее и цвета другие
 					{
-						Console.WriteLine($"Окно для перезахода. Позиция {startX} и {startY}");
+						LogAndConsoleWritelineAsync($"Окно для перезахода. Позиция {startX} и {startY}");
 						lock (threadLockType)
 						{
-							Console.WriteLine("[155][SYSTEM][] Lobbie relog");
+							LogAndConsoleWritelineAsync("[155][SYSTEM][] Lobbie relog");
 							TypeText(console,csgoProc.MainWindowHandle,serverConnectionString);
 						}
 						Thread.Sleep(5000); //5 сек делея что бы массовы перезаход не ложил комп
@@ -517,7 +544,6 @@ namespace ConsoleApp1
 				}
 				catch { }
 				
-				//Console.WriteLine($"[{login}] was killed");
 				SetOnline(0, accid);
 				processStarted -= 1;
 
@@ -541,7 +567,7 @@ namespace ConsoleApp1
 					}
 					catch (Exception ex)
 					{
-						Console.WriteLine($"[950][LOGIN: {login}]" + ex);
+						LogAndConsoleWritelineAsync($"[950][LOGIN: {login}]" + ex);
 					}
 					finally
 					{
@@ -551,7 +577,7 @@ namespace ConsoleApp1
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine($"[901][LOGIN: {login}]" + ex);
+				LogAndConsoleWritelineAsync($"[901][LOGIN: {login}]" + ex);
 			}
 		}
 
@@ -571,7 +597,7 @@ namespace ConsoleApp1
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex);
+				LogAndConsoleWritelineAsync(ex.Message);
 			}
 			finally
 			{
@@ -581,7 +607,7 @@ namespace ConsoleApp1
 
 		private static void TypeText(IntPtr console, IntPtr targer, string str)
 		{
-			langToEn();
+			LangToEn();
 			Thread.Sleep(500); //когда проц загружен нужен делей
 			SetForegroundWindow(console);
 			Thread.Sleep(100);
@@ -602,7 +628,7 @@ namespace ConsoleApp1
         {
             if(FindWindow(null, "Steam Login").ToString() != "0")
             {
-				Console.WriteLine("Плешивый стим найден");
+				LogAndConsoleWritelineAsync("Плешивый стим найден");
 				Thread.Sleep(10000);				
 			}			
 		}
@@ -645,17 +671,17 @@ namespace ConsoleApp1
 								while (reader.Read())
 								{
 									accid = Convert.ToInt32(reader.GetString(0));
-									Console.WriteLine($"ID: {accid}");
+									LogAndConsoleWritelineAsync($"ID: {accid}");
 
 									login = reader.GetString(1);
-									Console.WriteLine($"Login: {login}");
+									LogAndConsoleWritelineAsync($"Login: {login}");
 
 									password = reader.GetString(2);
 									secretKey = reader.GetString(3);
 									isOnline = Convert.ToBoolean(Convert.ToInt32(reader.GetString(4)));
 
 									lastDateOnline = Convert.ToDateTime(reader.GetString(5));
-									Console.WriteLine($"Last online: {lastDateOnline}");
+									LogAndConsoleWritelineAsync($"Last online: {lastDateOnline}");
 
 									canPlayDate = Convert.ToDateTime(reader.GetString(6));
 								}
@@ -670,17 +696,17 @@ namespace ConsoleApp1
 					catch (Exception ex)
 					{
 						conn.Close();
-						Console.WriteLine(ex.Message);
+						LogAndConsoleWritelineAsync(ex.Message);
 						if (ex.Message == "[902][SYSTEM] No suitable data")
 						{
-							Console.WriteLine("Wait until all accounts are closed");
+							LogAndConsoleWritelineAsync("Wait until all accounts are closed");
 							Console.ReadLine();
 							Environment.Exit(0);
 						}
 					}
 
 					if(exceptionsInARow!=0)
-					Console.WriteLine($"Exceptions in a row: {exceptionsInARow}");
+						LogAndConsoleWritelineAsync($"Exceptions in a row: {exceptionsInARow}");
 
 					if (exceptionsInARow >= 2)
 					{
@@ -697,14 +723,14 @@ namespace ConsoleApp1
 						}
 						catch (Exception ex)
 						{
-							Console.WriteLine(ex.Message);
+							LogAndConsoleWritelineAsync(ex.Message);
 						}
 						finally
 						{
 							exceptionsInARow = 0;
 							conn.Close();
 						}
-						Console.WriteLine("[066][SYSTEM] Too much exceptions");
+						LogAndConsoleWritelineAsync("[066][SYSTEM] Too much exceptions");
 						throw new Exception("Abort");
 					}
 
@@ -715,7 +741,7 @@ namespace ConsoleApp1
                         int WrongX = 0;
                         GetWindowThreadProcessId(wrongSteamWindow, ref WrongX);
                         Process WrongSteamLogingProc = Process.GetProcessById(WrongX);
-                        Console.WriteLine("[059] Wrong Steam Login Killed");
+						LogAndConsoleWritelineAsync("[059] Wrong Steam Login Killed");
                         WrongSteamLogingProc.Kill();
                         Thread.Sleep(1000);
                     }
@@ -765,7 +791,7 @@ namespace ConsoleApp1
 						steamWindowLogin = FindWindow(null, "Вход в Steam");
 						if (steamWindowLogin.ToString() != "0" && !listSteamLogin.Contains(steamWindowLogin.ToString())) //ищем стим, которого не было
 						{
-							Console.WriteLine("[SYSTEM] Steam detected");
+							LogAndConsoleWritelineAsync("[SYSTEM] Steam detected");
 
 							//listSteamLogin.Add(steamWindow.ToString());
 
@@ -780,7 +806,7 @@ namespace ConsoleApp1
 						steamWindowLogin = FindWindow(null, "Steam Login");
 						if (steamWindowLogin.ToString() != "0" && !listSteamLogin.Contains(steamWindowLogin.ToString()))
 						{
-							Console.WriteLine("[SYSTEM] Steam detected");
+							LogAndConsoleWritelineAsync("[SYSTEM] Steam detected");
 
 							//listSteamLogin.Add(steamWindow.ToString());
 
@@ -805,14 +831,14 @@ namespace ConsoleApp1
 								GetWindowThreadProcessId(steamWindowLogin, ref x);
 								Process steamProcS = Process.GetProcessById(x);
 								//listSteamLogin.Remove(steamProcS.MainWindowHandle.ToString());
-								Console.WriteLine("[911] Error");
+								LogAndConsoleWritelineAsync("[911] Error");
 								steamProcS.Kill();
 							}
 							catch
 							{
-								Console.WriteLine("[219][SYSTEM] Error");
+								LogAndConsoleWritelineAsync("[219][SYSTEM] Error");
 							}
-							Console.WriteLine("[SYSTEM] No Steam detected");
+							LogAndConsoleWritelineAsync("[SYSTEM] No Steam detected");
 							exceptionsInARow += 1;
 							Thread.Sleep(1000);
 							throw new Exception("Abort");
@@ -829,7 +855,7 @@ namespace ConsoleApp1
 						steamGuardWindow = FindWindow(null, "Steam Guard - Computer Authorization Required");
 						if (steamGuardWindow.ToString() != "0")
 						{
-							Console.WriteLine("[SYSTEM] Steam Guard detected");
+							LogAndConsoleWritelineAsync("[SYSTEM] Steam Guard detected");
 							guardDetected1 = true;
 							break;
 						}
@@ -837,7 +863,7 @@ namespace ConsoleApp1
 						steamGuardWindow = FindWindow(null, "Steam Guard — Необходима авторизация компьютера");
 						if (steamGuardWindow.ToString() != "0")
 						{
-							Console.WriteLine("[SYSTEM] Steam Guard detected");
+							LogAndConsoleWritelineAsync("[SYSTEM] Steam Guard detected");
 							guardDetected1 = true;
 							break;
 						}
@@ -846,7 +872,7 @@ namespace ConsoleApp1
 					}					
 					
 					codeGuardTask.Wait();
-					Console.WriteLine($"Guard code: {codeGuardTask.Result}");
+					LogAndConsoleWritelineAsync($"Guard code: {codeGuardTask.Result}");
 					if (guardDetected1 == true && steamGuardWindow.ToString() != "0")
 					{
 						Thread.Sleep(3000); //с 1 секунды до 3 сек что бы на высоких кол-вах не захлёбывался
@@ -864,8 +890,8 @@ namespace ConsoleApp1
 						//catch { }
 
 						steamProc.Kill(); // если процесс подвисает на время загрузки гварда, никак не убить
-						//listSteam.Remove(steamProc);
-						Console.WriteLine("[SYSTEM] No steam Guard detected №2");
+										  //listSteam.Remove(steamProc);
+						LogAndConsoleWritelineAsync("[SYSTEM] No steam Guard detected №2");
 						exceptionsInARow += 1;
 						Thread.Sleep(1000);
 						throw new Exception("Abort");
@@ -881,32 +907,42 @@ namespace ConsoleApp1
 							IntPtr updError = FindWindow(null, "Steam - Error"); //возникает если обнова была супер быстрая и уже скачалась до того как мы начали её детектить 
 							if (cs.ToString() != "0" || updError.ToString() !="0")
 							{
-								updatingWasFound = true;
-								Console.WriteLine("[SYSTEM] Updating...");
-								//Thread.Sleep(5000);			
+								Thread.Sleep(5000);
+								IntPtr cs2 = FindWindow(null, "Updating Counter-Strike: Global Offensive"); // 2-я проверка через 5 секунд потому что бывают фейк обновы
+								IntPtr updError2 = FindWindow(null, "Steam - Error"); //возникает если обнова была супер быстрая и уже скачалась до того как мы начали её детектить 
+								if (cs2.ToString() != "0" || updError2.ToString() != "0")
+                                {
+									updatingWasFound = true;
+									LogAndConsoleWritelineAsync("[SYSTEM] Updating...");
+									//Thread.Sleep(5000);			
 
-								IntPtr toggle = FindWindow(null, "Toggle"); 
-								if (toggle.ToString() == "0")
-								{
-									Process processTog = new Process();
-									ProcessStartInfo processStartInfoTog = new ProcessStartInfo();
-
-									processStartInfoTog.WindowStyle = ProcessWindowStyle.Minimized;
-									processStartInfoTog.FileName = "cmd.exe";
-									processStartInfo.UseShellExecute = true;
-									processStartInfoTog.Arguments = string.Format("/C \"{0}\" {1}", new object[]
+									IntPtr toggle = FindWindow(null, "Toggle");
+									if (toggle.ToString() == "0")
 									{
+										Process processTog = new Process();
+										ProcessStartInfo processStartInfoTog = new ProcessStartInfo();
+
+										processStartInfoTog.WindowStyle = ProcessWindowStyle.Minimized;
+										processStartInfoTog.FileName = "cmd.exe";
+										processStartInfo.UseShellExecute = true;
+										processStartInfoTog.Arguments = string.Format("/C \"{0}\" {1}", new object[]
+										{
 										$@"{AppDomain.CurrentDomain.BaseDirectory}\Toggle.exe",
 										lastCycle.ToString()
-									});
+										});
 
-									processTog.StartInfo = processStartInfoTog;
-									processTog.Start();
-									Environment.Exit(0);
+										processTog.StartInfo = processStartInfoTog;
+										processTog.Start();
+										Environment.Exit(0);
+									}
+									else
+									{
+										Console.ReadLine(); //ждём пока тогл всё решит за нас
+									}
 								}
-								else
-								{
-									Console.ReadLine(); //ждём пока тогл всё решит за нас
+                                else
+                                {
+									LogAndConsoleWritelineAsync("[SYSTEM] Fake Updating");
 								}
 							}
 
@@ -936,8 +972,8 @@ namespace ConsoleApp1
 							Thread.Sleep(500);
 							ts.Cancel();
 							listSteamLogin.Add(steamWindowLogin.ToString());
-							Console.WriteLine("[SYSTEM] CS:GO detected");
-							Console.WriteLine(new string('-', 20)+$"Current window: {currentCycle}/{lastCycle}");
+							LogAndConsoleWritelineAsync("[SYSTEM] CS:GO detected");
+							LogAndConsoleWritelineAsync(new string('-', 20)+$"Current window: {currentCycle}/{lastCycle}");
 							GetWindowThreadProcessId(csgoWindow, ref csProcId);
 							csgoProc = Process.GetProcessById(csProcId);
 							//listCsgo.Add(csgoProc);
@@ -965,9 +1001,9 @@ namespace ConsoleApp1
 							}
                             catch
                             {
-								Console.WriteLine("[203][SYSTEM] Error");
+								LogAndConsoleWritelineAsync("[203][SYSTEM] Error");
 							}
-                            Console.WriteLine("[SYSTEM] No CSGO detected");
+							LogAndConsoleWritelineAsync("[SYSTEM] No CSGO detected");
 							exceptionsInARow += 1;
 							Thread.Sleep(1000);
 							throw new Exception("Abort");
@@ -982,8 +1018,8 @@ namespace ConsoleApp1
 			}
 			catch (Exception ex)
 			{
-				Console.WriteLine(ex.Message);
-				Console.WriteLine(new string('-', 35));
+				LogAndConsoleWritelineAsync(ex.Message);
+				LogAndConsoleWritelineAsync(new string('-', 35));
 			}
 		}
 
@@ -998,7 +1034,7 @@ namespace ConsoleApp1
 				}
 				listCsgo.Clear();
 
-				Console.WriteLine("[SYSTEM] All CS:GO killed");
+				LogAndConsoleWritelineAsync("[SYSTEM] All CS:GO killed");
 				foreach (var win in listSteam)
 				{
 					win.Kill();
@@ -1008,12 +1044,12 @@ namespace ConsoleApp1
 					Thread.Sleep(500);
 				}
 				//listSteam.Clear();
-				Console.WriteLine("[SYSTEM] All Steam killed");
-				Console.WriteLine(new string('-',35));
+				LogAndConsoleWritelineAsync("[SYSTEM] All Steam killed");
+				LogAndConsoleWritelineAsync(new string('-',35));
 			}
             catch(Exception ex)
             {
-				Console.WriteLine(ex);
+				LogAndConsoleWritelineAsync(ex.Message);
             }			
 		}
 
@@ -1038,7 +1074,7 @@ namespace ConsoleApp1
 					else
 					{
 						conn.Close();
-						Console.WriteLine("[500][SYSTEM] License is not active");
+						LogAndConsoleWritelineAsync("[500][SYSTEM] License is not active");
 						Thread.Sleep(5000);
 						Environment.Exit(0);
 					}
@@ -1048,7 +1084,7 @@ namespace ConsoleApp1
 			catch
 			{
 				conn.Close();
-				Console.WriteLine("[SYSTEM][404] Something went wrong!");
+				LogAndConsoleWritelineAsync("[SYSTEM][404] Something went wrong!");
 				Thread.Sleep(5000);
 				Environment.Exit(0);
 			}
@@ -1089,15 +1125,15 @@ namespace ConsoleApp1
 			SetForegroundWindow(conWindow);
 
 			Console.ForegroundColor = ConsoleColor.Red;
-			Console.WriteLine("IDLE MACHINE v1.9.1");
-			Console.WriteLine("discord.gg/nRrrpqhRtg");
+			LogAndConsoleWritelineAsync("IDLE MACHINE v1.9.1");
+			LogAndConsoleWritelineAsync("discord.gg/nRrrpqhRtg");
 			Console.ResetColor();
 
             IntPtr csServer = new IntPtr();
 			csServer = FindWindow(null, "Counter-Strike: Global Offensive");
 			if (csServer.ToString() != "0") //переименовываем сервер что бы не мешал
             {
-				Console.WriteLine("Server Detected");
+				LogAndConsoleWritelineAsync("Server Detected");
 				SetWindowText(csServer, $"csgo_server");
 			}
 					
@@ -1114,8 +1150,8 @@ namespace ConsoleApp1
 				//CheckSubscribe(key);
 
 				if (true) //PcInfo.GetCurrentPCInfo() == key
-				{	
-					Console.WriteLine("[SYSTEM] License confirmed");
+				{
+					LogAndConsoleWritelineAsync("[SYSTEM] License confirmed");
 
 					SetOnlineZero(); 
 					if (File.Exists($@"{AppDomain.CurrentDomain.BaseDirectory}\connection.txt"))
@@ -1138,7 +1174,7 @@ namespace ConsoleApp1
 							}
 							catch
 							{
-								Console.WriteLine("Write the number of windows csgo: ");
+								LogAndConsoleWritelineAsync("Write the number of windows csgo: ");
 								count = Convert.ToInt32(Console.ReadLine());
 							}
 							int cycleCount = 0;
@@ -1169,7 +1205,7 @@ namespace ConsoleApp1
 						}
 						else
 						{
-							Console.WriteLine("[600][SYSTEM] connection.txt is empty");
+							LogAndConsoleWritelineAsync("[600][SYSTEM] connection.txt is empty");
 							Thread.Sleep(5000);
 							Environment.Exit(0);
 						}
@@ -1177,7 +1213,7 @@ namespace ConsoleApp1
 					}
 					else
 					{
-						Console.WriteLine("[601][SYSTEM] connection.txt not found");
+						LogAndConsoleWritelineAsync("[601][SYSTEM] connection.txt not found");
 						Thread.Sleep(5000);
 						Environment.Exit(0);
 					}
@@ -1185,14 +1221,14 @@ namespace ConsoleApp1
 				}
 				else
 				{
-					Console.WriteLine("[560][SYSTEM] License not found");
+					LogAndConsoleWritelineAsync("[560][SYSTEM] License not found");
 					Thread.Sleep(5000);
 					Environment.Exit(0);
 				}
 			}
 			else
 			{
-				Console.WriteLine("[561][SYSTEM] License not found");
+				LogAndConsoleWritelineAsync("[561][SYSTEM] License not found");
 				Thread.Sleep(5000);
 				Environment.Exit(0);
 			}
