@@ -13,6 +13,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Drawing;
+using System.Drawing.Imaging;
 
 namespace ConsoleApp1
 {
@@ -192,7 +193,7 @@ namespace ConsoleApp1
 
 		private static List<Process> listSteam = new List<Process>();
 
-		private static int timeIdle = 12600000; //210 минут 12600000;
+		private static int timeIdle = 12600000; //210 минут 12600000; 24 часа 86400000
 
 		private static int consoleX = 380;
 		
@@ -236,6 +237,15 @@ namespace ConsoleApp1
 			if (minToNewCycle <= 1)
 			{
 				tmr.Enabled = false;
+
+				Rectangle rect = new Rectangle(0, 0, GetDeviceCaps(primary, 118), GetDeviceCaps(primary, 117));
+				Bitmap bmp = new Bitmap(rect.Width, rect.Height, PixelFormat.Format32bppArgb);
+				Graphics g = Graphics.FromImage(bmp);
+				g.CopyFromScreen(rect.Left, rect.Top, 0, 0, bmp.Size,
+				CopyPixelOperation.SourceCopy);
+				System.IO.Directory.CreateDirectory("ScreenShots");
+				string name = DateTime.Now.ToString().Replace(":", " ");
+				bmp.Save($@"ScreenShots\{name}.png", ImageFormat.Png);
 			}
 		}
 
@@ -752,6 +762,7 @@ namespace ConsoleApp1
 					Process guardProc = new Process();
 					Process process = new Process();
 					ProcessStartInfo processStartInfo = new ProcessStartInfo();
+					Thread myThread7 = default;
 
 					processStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 					processStartInfo.FileName = "cmd.exe";					
@@ -869,8 +880,15 @@ namespace ConsoleApp1
 						}
 
 						Thread.Sleep(100);
-					}					
-					
+					}
+
+
+					try
+					{
+						myThread7.Join();
+					}
+					catch { }
+
 					codeGuardTask.Wait();
 					LogAndConsoleWritelineAsync($"Guard code: {codeGuardTask.Result}");
 					if (guardDetected1 == true && steamGuardWindow.ToString() != "0")
@@ -958,7 +976,7 @@ namespace ConsoleApp1
 
 					bool timeIsOver = false;
 					System.Timers.Timer tmr2 = new System.Timers.Timer();
-                    tmr2.Interval = 1000*120;
+                    tmr2.Interval = 1000*140;
                     tmr2.Elapsed += (o, e) => CheckTime(ref timeIsOver, tmr2);
 					tmr2.Enabled = true;
 					int xOffSave = xOffset;
@@ -976,8 +994,11 @@ namespace ConsoleApp1
 							LogAndConsoleWritelineAsync(new string('-', 20)+$"Current window: {currentCycle}/{lastCycle}");
 							GetWindowThreadProcessId(csgoWindow, ref csProcId);
 							csgoProc = Process.GetProcessById(csProcId);
-							//listCsgo.Add(csgoProc);
-							SetWindowText(csgoWindow, $"csgo_{login}"); //ждёт подгруза кски, занимает се кунд 10. Но если не ждать, то слишком быстро всё
+
+							//ждёт подгруза кски, занимает се кунд 10. Но если не ждать, то слишком быстро всё
+							myThread7 = new Thread(delegate () { SetWindowText(csgoWindow, $"csgo_{login}"); });
+							myThread7.Start();
+
 							SetCsgoPosAsync(csgoWindow, xOffset, yOffset,login);
 							break;
 						}
