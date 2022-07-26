@@ -225,6 +225,8 @@ namespace ConsoleApp1
 
 		static int exceptionsInARow = 0;
 
+		static DateTime lastTimeCSStarted = DateTime.Now;
+
 		private static bool updatingWasFound = false;
 
 		private static void TmrEvent(object sender, ElapsedEventArgs e)
@@ -452,7 +454,7 @@ namespace ConsoleApp1
 
 		private static async Task TypeInCsgoAsync(Process steamProc, Process csgoProc, string login, int accid, IntPtr console, int xOff,int yOff)
 		{
-			await Task.Delay(100000);
+			await Task.Delay(150000);
 			Task t = Task.Run(() => TypeInCsgo(steamProc, login, accid, console, xOff, yOff));
             System.Timers.Timer timer = new System.Timers.Timer(timeIdle);
 			timer.Elapsed += (o, e) => KillCsSteam(steamProc, csgoProc, accid, login);
@@ -932,31 +934,97 @@ namespace ConsoleApp1
                                 {
 									updatingWasFound = true;
 									LogAndConsoleWritelineAsync("[SYSTEM] Updating...");
-									//Thread.Sleep(5000);			
-
-									IntPtr toggle = FindWindow(null, "Toggle");
-									if (toggle.ToString() == "0")
+									//Thread.Sleep(5000);
+										
+									if (lastTimeCSStarted.AddMinutes(30) > DateTime.Now) //если ласт кска была запущена меньше 30 минут назад то можно обновлять всё
 									{
-										Process processTog = new Process();
-										ProcessStartInfo processStartInfoTog = new ProcessStartInfo();
-
-										processStartInfoTog.WindowStyle = ProcessWindowStyle.Minimized;
-										processStartInfoTog.FileName = "cmd.exe";
-										processStartInfo.UseShellExecute = true;
-										processStartInfoTog.Arguments = string.Format("/C \"{0}\" {1}", new object[]
+										LogAndConsoleWritelineAsync("[SYSTEM] csgo was started recently");
+										IntPtr toggle = FindWindow(null, "Toggle");
+										if (toggle.ToString() == "0")
 										{
-										$@"{AppDomain.CurrentDomain.BaseDirectory}\Toggle.exe",
-										lastCycle.ToString()
-										});
+											Process processTog = new Process();
+											ProcessStartInfo processStartInfoTog = new ProcessStartInfo();
 
-										processTog.StartInfo = processStartInfoTog;
-										processTog.Start();
-										Environment.Exit(0);
+											processStartInfoTog.WindowStyle = ProcessWindowStyle.Minimized;
+											processStartInfoTog.FileName = "cmd.exe";
+											processStartInfo.UseShellExecute = true;
+											processStartInfoTog.Arguments = string.Format("/C \"{0}\" {1}", new object[]
+											{
+												$@"{AppDomain.CurrentDomain.BaseDirectory}\Toggle.exe",
+												lastCycle.ToString()
+											});
+
+											processTog.StartInfo = processStartInfoTog;
+											processTog.Start();
+											Environment.Exit(0);
+										}
+										else
+										{
+											Console.ReadLine(); //ждём пока тогл всё решит за нас
+										}
 									}
-									else
-									{
-										Console.ReadLine(); //ждём пока тогл всё решит за нас
-									}
+                                    else //если позже, значит октрыты все окна и нужно даждаться пока всё профармит
+                                    {
+										LogAndConsoleWritelineAsync("[SYSTEM] waiting csgo close");
+                                        while (true)
+                                        {
+											Process[] csProcArray = Process.GetProcessesByName("csgo");
+											if (csProcArray.Length == 0) //если кски все закрылись, то можно обновлять 
+                                            {
+												LogAndConsoleWritelineAsync("[SYSTE] all csgo closed ready to update");
+												IntPtr toggle = FindWindow(null, "Toggle");
+												if (toggle.ToString() == "0")
+												{
+													Process processTog = new Process();
+													ProcessStartInfo processStartInfoTog = new ProcessStartInfo();
+
+													processStartInfoTog.WindowStyle = ProcessWindowStyle.Minimized;
+													processStartInfoTog.FileName = "cmd.exe";
+													processStartInfo.UseShellExecute = true;
+													processStartInfoTog.Arguments = string.Format("/C \"{0}\" {1}", new object[]
+													{
+														$@"{AppDomain.CurrentDomain.BaseDirectory}\Toggle.exe",
+														lastCycle.ToString()
+													});
+
+													processTog.StartInfo = processStartInfoTog;
+													processTog.Start();
+													Environment.Exit(0);
+												}
+												else
+												{
+													Console.ReadLine(); //ждём пока тогл всё решит за нас
+												}
+											}
+
+											Thread.Sleep(5000);
+                                        }
+                                    }
+								
+
+									//IntPtr toggle = FindWindow(null, "Toggle");
+									//if (toggle.ToString() == "0")
+									//{
+									//	Process processTog = new Process();
+									//	ProcessStartInfo processStartInfoTog = new ProcessStartInfo();
+
+									//	processStartInfoTog.WindowStyle = ProcessWindowStyle.Minimized;
+									//	processStartInfoTog.FileName = "cmd.exe";
+									//	processStartInfo.UseShellExecute = true;
+									//	processStartInfoTog.Arguments = string.Format("/C \"{0}\" {1}", new object[]
+									//	{
+									//	$@"{AppDomain.CurrentDomain.BaseDirectory}\Toggle.exe",
+									//	lastCycle.ToString()
+									//	});
+
+									//	processTog.StartInfo = processStartInfoTog;
+									//	processTog.Start();
+									//	Environment.Exit(0);
+									//}
+									//else
+									//{
+									//	Console.ReadLine(); //ждём пока тогл всё решит за нас
+									//}
 								}
                                 else
                                 {
@@ -994,6 +1062,7 @@ namespace ConsoleApp1
 							LogAndConsoleWritelineAsync(new string('-', 20)+$"Current window: {currentCycle}/{lastCycle}");
 							GetWindowThreadProcessId(csgoWindow, ref csProcId);
 							csgoProc = Process.GetProcessById(csProcId);
+							lastTimeCSStarted = DateTime.Now;
 
 							//ждёт подгруза кски, занимает се кунд 10. Но если не ждать, то слишком быстро всё
 							myThread7 = new Thread(delegate () { SetWindowText(csgoWindow, $"csgo_{login}"); });

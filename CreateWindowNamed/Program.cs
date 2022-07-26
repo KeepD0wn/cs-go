@@ -25,7 +25,7 @@ namespace CreateWindowNamed
             Console.WriteLine("Введите название окна");
 
             string c = Console.ReadLine();
-            Console.Title = c; 
+            Console.Title = c;
             Console.WriteLine("закончили");
             Console.ReadLine();
         }
