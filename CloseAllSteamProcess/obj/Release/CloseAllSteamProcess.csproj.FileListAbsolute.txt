@@ -18,7 +18,6 @@ C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Release\System.
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Release\System.Numerics.Vectors.dll
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Release\System.Runtime.CompilerServices.Unsafe.dll
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Release\Ubiety.Dns.Core.dll
-C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Release\Zstandard.Net.dll
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Release\Google.Protobuf.pdb
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Release\Google.Protobuf.xml
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Release\K4os.Compression.LZ4.xml
@@ -31,3 +30,8 @@ C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Release\System.
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Release\System.Runtime.CompilerServices.Unsafe.xml
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\obj\Release\CloseAllSteamProcess.Properties.Resources.resources
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\obj\Release\CloseAllSteamProcess.csproj.GenerateResource.cache
+C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Release\System.CodeDom.dll
+C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Release\ZstdNet.dll
+C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Release\BouncyCastle.Crypto.xml
+C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Release\System.CodeDom.xml
+C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\obj\Release\CloseAllSteamProcess.csproj.AssemblyReference.cache

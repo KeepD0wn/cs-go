@@ -21,7 +21,6 @@ C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Debug\System.Memory.d
 C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Debug\System.Numerics.Vectors.dll
 C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
 C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Debug\Ubiety.Dns.Core.dll
-C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Debug\Zstandard.Net.dll
 C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Debug\Google.Protobuf.pdb
 C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Debug\Google.Protobuf.xml
 C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Debug\K4os.Compression.LZ4.xml
@@ -35,3 +34,7 @@ C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Debug\System.Runtime.
 C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\obj\Debug\SteamGuardCode.Properties.Resources.resources
 C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\obj\Debug\SteamGuardCode.csproj.GenerateResource.cache
 C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\obj\Debug\SteamGuardCode.csproj.AssemblyReference.cache
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Debug\System.CodeDom.dll
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Debug\ZstdNet.dll
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Debug\BouncyCastle.Crypto.xml
+C:\Users\gvozd\source\repos\ConsoleApp1\SteamGuardCode\bin\Debug\System.CodeDom.xml

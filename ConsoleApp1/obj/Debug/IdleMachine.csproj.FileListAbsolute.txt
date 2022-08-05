@@ -19,7 +19,6 @@ C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\System.Memory.dll
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\System.Numerics.Vectors.dll
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\Ubiety.Dns.Core.dll
-C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\Zstandard.Net.dll
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\Newtonsoft.Json.dll
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\SteamAuth.pdb
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\DocumentFormat.OpenXml.xml
@@ -44,3 +43,5 @@ C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.applic
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\IdleMachine.csproj.CopyComplete
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.exe
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.pdb
+C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\ZstdNet.dll
+C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\BouncyCastle.Crypto.xml

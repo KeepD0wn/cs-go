@@ -18,7 +18,6 @@ C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Debug\System.Me
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Debug\System.Numerics.Vectors.dll
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Debug\Ubiety.Dns.Core.dll
-C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Debug\Zstandard.Net.dll
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Debug\Google.Protobuf.pdb
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Debug\Google.Protobuf.xml
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Debug\K4os.Compression.LZ4.xml
@@ -32,3 +31,7 @@ C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Debug\System.Ru
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\obj\Debug\CloseAllSteamProcess.Properties.Resources.resources
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\obj\Debug\CloseAllSteamProcess.csproj.GenerateResource.cache
 C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\obj\Debug\CloseAllSteamProcess.csproj.AssemblyReference.cache
+C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Debug\System.CodeDom.dll
+C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Debug\ZstdNet.dll
+C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Debug\BouncyCastle.Crypto.xml
+C:\Users\gvozd\source\repos\ConsoleApp1\CloseAllSteamProcess\bin\Debug\System.CodeDom.xml

@@ -767,8 +767,9 @@ namespace ConsoleApp1
 					Thread myThread7 = default;
 
 					processStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-					processStartInfo.FileName = "cmd.exe";					
-                    processStartInfo.Arguments = string.Format("/C \"{0}\" -login {1} {2} -applaunch 730 -no-browser -language {3}{4}-x {5} -y {6} {7} {8}", new object[]
+					processStartInfo.FileName = "cmd.exe";
+					//-no-browser
+					processStartInfo.Arguments = string.Format("/C \"{0}\" -login {1} {2} -applaunch 730 -no-browser -language {3}{4}-x {5} -y {6} {7} {8}", new object[]
                     {
                        @"C:\Program Files (x86)\Steam\steam.exe",
                       login,
@@ -1049,10 +1050,42 @@ namespace ConsoleApp1
 					tmr2.Enabled = true;
 					int xOffSave = xOffset;
 					int yOffSave = yOffset;
+					IntPtr steamSyncWindow = default;
 
 					while (true)
 					{
 						csgoWindow = FindWindow(null, "Counter-Strike: Global Offensive - Direct3D 9");
+						steamSyncWindow = FindWindow(null, "Steam Dialog");
+
+						if (steamSyncWindow.ToString() != "0")
+						{
+							Thread.Sleep(1000);
+							LogAndConsoleWritelineAsync("[SYSTEM] SYNC handler");
+							SetForegroundWindow(steamSyncWindow);
+							Thread.Sleep(500);
+							SetCursorPos(831, 697);
+							Thread.Sleep(500);
+							mouse_event(MOUSEEVENTF_LEFTDOWN, (uint)831, (uint)697, 0, 0);
+							Thread.Sleep(50);
+							mouse_event(MOUSEEVENTF_LEFTUP, (uint)831, (uint)697, 0, 0);
+							Thread.Sleep(100);
+
+							SetCursorPos(807, 643);
+							Thread.Sleep(500);
+							mouse_event(MOUSEEVENTF_LEFTDOWN, (uint)807, (uint)643, 0, 0);
+							Thread.Sleep(50);
+							mouse_event(MOUSEEVENTF_LEFTUP, (uint)807, (uint)643, 0, 0);
+							Thread.Sleep(100);
+
+							SetCursorPos(949, 819);
+							Thread.Sleep(500);
+							mouse_event(MOUSEEVENTF_LEFTDOWN, (uint)949, (uint)819, 0, 0);
+							Thread.Sleep(50);
+							mouse_event(MOUSEEVENTF_LEFTUP, (uint)949, (uint)819, 0, 0);
+
+							Thread.Sleep(500);
+						}
+
 						if (csgoWindow.ToString() != "0")
 						{							
 							Thread.Sleep(500);
