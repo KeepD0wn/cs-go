@@ -4,3 +4,5 @@ C:\Users\gvozd\source\repos\ConsoleApp1\Toggle\bin\Debug\Toggle.pdb
 C:\Users\gvozd\source\repos\ConsoleApp1\Toggle\obj\Debug\Toggle.csproj.CoreCompileInputs.cache
 C:\Users\gvozd\source\repos\ConsoleApp1\Toggle\obj\Debug\Toggle.exe
 C:\Users\gvozd\source\repos\ConsoleApp1\Toggle\obj\Debug\Toggle.pdb
+C:\Users\gvozd\source\repos\ConsoleApp1\Toggle\obj\Debug\Toggle.csproj.AssemblyReference.cache
+C:\Users\gvozd\source\repos\ConsoleApp1\Toggle\obj\Debug\Toggle.csproj.SuggestedBindingRedirects.cache

@@ -346,10 +346,10 @@ namespace Toggle
             
             while (true)
             {
+                Process[] csProcArray = Process.GetProcessesByName("csgo");
                 IntPtr ready = FindWindow(null, $"Ready - Counter-Strike: Global Offensive");
-                IntPtr csgoWindow = FindWindow(null, "Counter-Strike: Global Offensive - Direct3D 9");
                 LogAsync("waiting cs ready window");
-                if (ready.ToString() != "0" || csgoWindow.ToString() != "0")
+                if (ready.ToString() != "0" || csProcArray.Length != 0)
                 {
                     Thread.Sleep(5000);
                     LogAsync("window cs ready or cs window found");

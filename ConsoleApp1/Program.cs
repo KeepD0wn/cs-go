@@ -1055,36 +1055,36 @@ namespace ConsoleApp1
 					while (true)
 					{
 						csgoWindow = FindWindow(null, "Counter-Strike: Global Offensive - Direct3D 9");
-						steamSyncWindow = FindWindow(null, "Steam Dialog");
+						//steamSyncWindow = FindWindow(null, "Steam Dialog");
 
-						if (steamSyncWindow.ToString() != "0")
-						{
-							Thread.Sleep(1000);
-							LogAndConsoleWritelineAsync("[SYSTEM] SYNC handler");
-							SetForegroundWindow(steamSyncWindow);
-							Thread.Sleep(500);
-							SetCursorPos(831, 697);
-							Thread.Sleep(500);
-							mouse_event(MOUSEEVENTF_LEFTDOWN, (uint)831, (uint)697, 0, 0);
-							Thread.Sleep(50);
-							mouse_event(MOUSEEVENTF_LEFTUP, (uint)831, (uint)697, 0, 0);
-							Thread.Sleep(100);
+						//if (steamSyncWindow.ToString() != "0")
+						//{
+						//	Thread.Sleep(1000);
+						//	LogAndConsoleWritelineAsync("[SYSTEM] SYNC handler");
+						//	SetForegroundWindow(steamSyncWindow);
+						//	Thread.Sleep(500);
+						//	SetCursorPos(831, 697);
+						//	Thread.Sleep(500);
+						//	mouse_event(MOUSEEVENTF_LEFTDOWN, (uint)831, (uint)697, 0, 0);
+						//	Thread.Sleep(50);
+						//	mouse_event(MOUSEEVENTF_LEFTUP, (uint)831, (uint)697, 0, 0);
+						//	Thread.Sleep(100);
 
-							SetCursorPos(807, 643);
-							Thread.Sleep(500);
-							mouse_event(MOUSEEVENTF_LEFTDOWN, (uint)807, (uint)643, 0, 0);
-							Thread.Sleep(50);
-							mouse_event(MOUSEEVENTF_LEFTUP, (uint)807, (uint)643, 0, 0);
-							Thread.Sleep(100);
+						//	SetCursorPos(807, 643);
+						//	Thread.Sleep(500);
+						//	mouse_event(MOUSEEVENTF_LEFTDOWN, (uint)807, (uint)643, 0, 0);
+						//	Thread.Sleep(50);
+						//	mouse_event(MOUSEEVENTF_LEFTUP, (uint)807, (uint)643, 0, 0);
+						//	Thread.Sleep(100);
 
-							SetCursorPos(949, 819);
-							Thread.Sleep(500);
-							mouse_event(MOUSEEVENTF_LEFTDOWN, (uint)949, (uint)819, 0, 0);
-							Thread.Sleep(50);
-							mouse_event(MOUSEEVENTF_LEFTUP, (uint)949, (uint)819, 0, 0);
+						//	SetCursorPos(949, 819);
+						//	Thread.Sleep(500);
+						//	mouse_event(MOUSEEVENTF_LEFTDOWN, (uint)949, (uint)819, 0, 0);
+						//	Thread.Sleep(50);
+						//	mouse_event(MOUSEEVENTF_LEFTUP, (uint)949, (uint)819, 0, 0);
 
-							Thread.Sleep(500);
-						}
+						//	Thread.Sleep(500);
+						//}
 
 						if (csgoWindow.ToString() != "0")
 						{							

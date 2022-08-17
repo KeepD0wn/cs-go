@@ -5,3 +5,4 @@ C:\Users\gvozd\source\repos\ConsoleApp1\Toggle\obj\Release\Toggle.csproj.CoreCom
 C:\Users\gvozd\source\repos\ConsoleApp1\Toggle\obj\Release\Toggle.exe
 C:\Users\gvozd\source\repos\ConsoleApp1\Toggle\obj\Release\Toggle.pdb
 C:\Users\gvozd\source\repos\ConsoleApp1\Toggle\obj\Release\Toggle.csproj.AssemblyReference.cache
+C:\Users\gvozd\source\repos\ConsoleApp1\Toggle\obj\Release\Toggle.csproj.SuggestedBindingRedirects.cache
