@@ -45,7 +45,7 @@ namespace ConsoleApp1
 		private static string parsnew = "-silent -nofriendsui -nochatui -single_core -novid -noshader -nofbo -nodcaudio -nomsaa -16bpp -nosound -high";
 		
 		private static string V2 = "-window -32bit +mat_disable_bloom 1 +func_break_max_pieces 0 +r_drawparticles 0 -nosync -console -noipx -nojoy +exec autoexec.cfg -nocrashdialog -high -d3d9ex -noforcemparms -noaafonts" +
-			" -noforcemaccel -limitvsconst +r_dynamic 0 -noforcemspd +fps_max 30 -nopreload -nopreloadmodels +cl_forcepreload 0 " +
+			" -noforcemaccel -limitvsconst +r_dynamic 0 -noforcemspd +fps_max 3 -nopreload -nopreloadmodels +cl_forcepreload 0 " +
 			"-nosound -novid -w 640 -h 480 "; //крайне важен пробел в конце		меньше чеи 640х480 нельзя, иначе кску крашит
 
 		private static string serverConnectionString = "";
@@ -193,7 +193,7 @@ namespace ConsoleApp1
 
 		private static List<Process> listSteam = new List<Process>();
 
-		private static int timeIdle = 12600000; //210 минут 12600000; 24 часа 86400000
+		private static int timeIdle = 12600000; //210 минут 12600000; 1230 минут (20.5 часа) 73800000
 
 		private static int consoleX = 380;
 		
@@ -409,8 +409,8 @@ namespace ConsoleApp1
 				{					
 					Thread.Sleep(100);
 					//SetForegroundWindow(csgoWin);
-					int xCs = xOff + 40; //+ отступ в зависимости от окна
-					int yCs = yOff + 160;
+					int xCs = xOff + 95; //+ отступ в зависимости от окна
+					int yCs = yOff + 38;
 					int x = monitorSizeX - 265;
 					int y = monitorSizeY - 300;
 
@@ -542,7 +542,7 @@ namespace ConsoleApp1
                 {
 					csgoProc.Kill();
 					//listCsgo.Remove(csgoProc);
-					Thread.Sleep(1000*15); //15 сек на синхронизацию
+					Thread.Sleep(1000*30); //30 сек на синхронизацию
 				}
                 catch
 				{
@@ -769,7 +769,7 @@ namespace ConsoleApp1
 					processStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 					processStartInfo.FileName = "cmd.exe";
 					//-no-browser
-					processStartInfo.Arguments = string.Format("/C \"{0}\" -login {1} {2} -applaunch 730 -no-browser -language {3}{4}-x {5} -y {6} {7} {8}", new object[]
+					processStartInfo.Arguments = string.Format("/C \"{0}\" -login {1} {2} -applaunch 730 -no-browser -language {3} {4} -x {5} -y {6} {7} {8}", new object[]
                     {
                        @"C:\Program Files (x86)\Steam\steam.exe",
                       login,
@@ -1101,6 +1101,7 @@ namespace ConsoleApp1
 							myThread7 = new Thread(delegate () { SetWindowText(csgoWindow, $"csgo_{login}"); });
 							myThread7.Start();
 
+							Thread.Sleep(5000); //без этого делея бывает редко окна друг на друга ставятся
 							SetCsgoPosAsync(csgoWindow, xOffset, yOffset,login);
 							break;
 						}
