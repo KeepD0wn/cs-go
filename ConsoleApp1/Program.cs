@@ -40,13 +40,13 @@ namespace ConsoleApp1
 			WM_GETTEXT = 0x000D
 		}
 
-		private static string def = "silent -nofriendsui -nochatui -single_core -novid -noshader -nofbo -nodcaudio -nomsaa -16bpp -nosound -high";
+		private static string def = "silent -nofriendsui -nochatui -novid -noshader -low -nomsaa -16bpp -nosound -high";
 		
-		private static string parsnew = "-silent -nofriendsui -nochatui -single_core -novid -noshader -nofbo -nodcaudio -nomsaa -16bpp -nosound -high";
+		private static string parsnew = "-silent -nofriendsui -nosteamcontroller -offline -nochatui -single_core -novid -noshader -nofbo -nodcaudio -nomsaa -16bpp -nosound -high";
 		
-		private static string V2 = "-window -32bit +mat_disable_bloom 1 +func_break_max_pieces 0 +r_drawparticles 0 -nosync -console -noipx -nojoy +exec autoexec.cfg -nocrashdialog -high -d3d9ex -noforcemparms -noaafonts" +
+		private static string V2 = "-window -32bit +mat_disable_bloom 1 +func_break_max_pieces 0 +r_drawparticles 0 -nosync -nosrgb -console -noipx -nojoy +exec autoexec.cfg -nocrashdialog -high -d3d9ex -noforcemparms -noaafonts" +
 			" -noforcemaccel -limitvsconst +r_dynamic 0 -noforcemspd +fps_max 3 -nopreload -nopreloadmodels +cl_forcepreload 0 " +
-			"-nosound -novid -w 640 -h 480 "; //крайне важен пробел в конце		меньше чеи 640х480 нельзя, иначе кску крашит
+            "-nosound -novid -w 640 -h 480 -nomouse"; //меньше чеи 640х480 нельзя, иначе кску крашит
 
 		private static string serverConnectionString = "";
 
@@ -397,7 +397,11 @@ namespace ConsoleApp1
                 Console.ResetColor();
 
             }
-            await Task.Run(() => SetCsgoPos(csgoWindow, xOffsetMonitor, yOffsetMonitor,login));
+            await Task.Run(() => {
+				SetCsgoPos(csgoWindow, xOffsetMonitor, yOffsetMonitor, login);
+				Thread.Sleep(60000);
+                SetCsgoPos(csgoWindow, xOffsetMonitor, yOffsetMonitor, login);
+            });
 		}
 
 		private static void TypeInCsgo(Process steamProc, string login, int accid, IntPtr console, int xOff, int yOff)
@@ -411,8 +415,9 @@ namespace ConsoleApp1
 					//SetForegroundWindow(csgoWin);
 					int xCs = xOff + 95; //+ отступ в зависимости от окна
 					int yCs = yOff + 38;
-					int x = monitorSizeX - 265;
-					int y = monitorSizeY - 300;
+                    //int x =  monitorSizeX - 265;
+                    int x = Convert.ToInt32(monitorSizeX * 0.70);
+                    int y = monitorSizeY - 20;
 
 					//клик по окну
 					SetCursorPos(xCs, yCs);
@@ -638,7 +643,7 @@ namespace ConsoleApp1
 
 		private static void CloseSteamPlesh()
         {
-            if(FindWindow(null, "Steam Login").ToString() != "0")
+            if(FindWindow(null, "Steam Sign In").ToString() != "0")
             {
 				LogAndConsoleWritelineAsync("Плешивый стим найден");
 				Thread.Sleep(10000);				
@@ -746,16 +751,34 @@ namespace ConsoleApp1
 						throw new Exception("Abort");
 					}
 
-                    //перед запуском проверяем что бы не было заблудившихся стим логинов, что бы они не руинили заходы
-                    while (FindWindow(null, "Steam Login").ToString() != "0" && !listSteamLogin.Contains(FindWindow(null, "Steam Login").ToString()))
+					//перед запуском проверяем что бы не было заблудившихся стим логинов, что бы они не руинили заходы
+					while (FindWindow(null, "Steam Sign In").ToString() != "0" && !listSteamLogin.Contains(FindWindow(null, "Steam Sign In").ToString()))
+					{
+						IntPtr wrongSteamWindow = FindWindow(null, "Steam Sign In");
+						int WrongX = 0;
+						GetWindowThreadProcessId(wrongSteamWindow, ref WrongX);
+						Process WrongSteamLogingProc = Process.GetProcessById(WrongX);
+						LogAndConsoleWritelineAsync("[059] Wrong Steam Sign In Killed");
+						WrongSteamLogingProc.Kill();
+						Thread.Sleep(1000);
+					}
+
+                    //ошибки кс го
+					IntPtr csgoError = FindWindow(null, "Error!");
+                    if (csgoError.ToString() != "0") 
                     {
-                        IntPtr wrongSteamWindow = FindWindow(null, "Steam Login");
-                        int WrongX = 0;
-                        GetWindowThreadProcessId(wrongSteamWindow, ref WrongX);
-                        Process WrongSteamLogingProc = Process.GetProcessById(WrongX);
-						LogAndConsoleWritelineAsync("[059] Wrong Steam Login Killed");
-                        WrongSteamLogingProc.Kill();
-                        Thread.Sleep(1000);
+						try
+						{
+                            LogAndConsoleWritelineAsync("[SYSTEM] Error!");
+                            int errorProcId = 0;
+                            GetWindowThreadProcessId(csgoError, ref errorProcId);
+                            Process errorProc = Process.GetProcessById(errorProcId);
+                            errorProc.Kill();
+                        }
+						catch
+						{
+
+						}                       
                     }
 
 
@@ -768,11 +791,11 @@ namespace ConsoleApp1
 
 					processStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 					processStartInfo.FileName = "cmd.exe";
-					//-no-browser
-					processStartInfo.Arguments = string.Format("/C \"{0}\" -login {1} {2} -applaunch 730 -no-browser -language {3} {4} -x {5} -y {6} {7} {8}", new object[]
+					//-no-browser после 730
+					processStartInfo.Arguments = string.Format("/C \"{0}\" -noreactlogin -login {1} {2} -applaunch 730 -no-browser -language {3} {4} -x {5} -y {6} {7} {8}", new object[]
                     {
                        @"C:\Program Files (x86)\Steam\steam.exe",
-                      login,
+                       login,
                        password,
                        accid,
                        Program.V2,
@@ -817,7 +840,7 @@ namespace ConsoleApp1
 							break;
 						}
 
-						steamWindowLogin = FindWindow(null, "Steam Login");
+						steamWindowLogin = FindWindow(null, "Steam Sign In");
 						if (steamWindowLogin.ToString() != "0" && !listSteamLogin.Contains(steamWindowLogin.ToString()))
 						{
 							LogAndConsoleWritelineAsync("[SYSTEM] Steam detected");
@@ -1045,7 +1068,7 @@ namespace ConsoleApp1
 
 					bool timeIsOver = false;
 					System.Timers.Timer tmr2 = new System.Timers.Timer();
-                    tmr2.Interval = 1000*140;
+                    tmr2.Interval = 1000*160; //для 24 версии 220 сек
                     tmr2.Elapsed += (o, e) => CheckTime(ref timeIsOver, tmr2);
 					tmr2.Enabled = true;
 					int xOffSave = xOffset;
@@ -1097,12 +1120,14 @@ namespace ConsoleApp1
 							csgoProc = Process.GetProcessById(csProcId);
 							lastTimeCSStarted = DateTime.Now;
 
-							//ждёт подгруза кски, занимает се кунд 10. Но если не ждать, то слишком быстро всё
-							myThread7 = new Thread(delegate () { SetWindowText(csgoWindow, $"csgo_{login}"); });
-							myThread7.Start();
+                            //ждёт подгруза кски, занимает се кунд 10. Но если не ждать, то слишком быстро всё
+                            //myThread7 = new Thread(delegate () { SetWindowText(csgoWindow, $"csgo_{login}"); });
+                            //myThread7.Start();
 
-							Thread.Sleep(5000); //без этого делея бывает редко окна друг на друга ставятся
-							SetCsgoPosAsync(csgoWindow, xOffset, yOffset,login);
+                            //Thread.Sleep(5000); //без этого делея бывает редко окна друг на друга ставятся                           
+                            SetWindowText(csgoWindow, $"csgo_{login}");
+							Thread.Sleep(3000);
+                            SetCsgoPosAsync(csgoWindow, xOffset, yOffset,login);
 							break;
 						}
 

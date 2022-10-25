@@ -370,12 +370,23 @@ namespace Toggle
 
                     CloseAllProcess();
 
-                    //тут замена папок панорамы 
-                    string directoria = $@"{AppDomain.CurrentDomain.BaseDirectory}\csgoSettings\panorama\videos";
-                    string kuda = @"C:\Program Files (x86)\Steam\steamapps\common\Counter-Strike Global Offensive\csgo\panorama\videos";
-                    Directory.Delete(kuda, true); //true - если директория не пуста удаляем все ее содержимое
-                    CopyDirectory(new DirectoryInfo(directoria), new DirectoryInfo(kuda));
-                    LogAsync("panorama files changed");
+                    //try
+                    //{
+                    //    //тут замена папок панорамы 
+                    //    Thread.Sleep(10000); //что бы папка больше не исползовалас стимом
+                    //    string directoria = $@"{AppDomain.CurrentDomain.BaseDirectory}\csgoSettings\panorama\videos";
+                    //    string kuda = @"C:\Program Files (x86)\Steam\steamapps\common\Counter-Strike Global Offensive\csgo\panorama\videos";
+                    //    Directory.Delete(kuda, true); //true - если директория не пуста удаляем все ее содержимое
+                    //    CopyDirectory(new DirectoryInfo(directoria), new DirectoryInfo(kuda));
+                    //    LogAsync("panorama files changed");
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    LogAsync(ex.Message);
+                    //}
+                   
+
+
 
                     try
                     {
