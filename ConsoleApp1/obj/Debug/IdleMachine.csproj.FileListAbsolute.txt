@@ -46,3 +46,4 @@ C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.pdb
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\ZstdNet.dll
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\BouncyCastle.Crypto.xml
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\IdleMachine.csproj.SuggestedBindingRedirects.cache
+C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\Newtonsoft.Json.xml

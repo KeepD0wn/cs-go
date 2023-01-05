@@ -40,13 +40,13 @@ namespace ConsoleApp1
 			WM_GETTEXT = 0x000D
 		}
 
-		private static string def = "silent -nofriendsui -nochatui -novid -noshader -low -nomsaa -16bpp -nosound -high";
+		private static string def = "silent -nofriendsui -nochatui -noshader -low -16bpp -high";
 		
-		private static string parsnew = "-silent -nofriendsui -nosteamcontroller -offline -nochatui -single_core -novid -noshader -nofbo -nodcaudio -nomsaa -16bpp -nosound -high";
+		private static string parsnew = "-silent -nofriendsui -nosteamcontroller -nochatui -single_core -noshader -nofbo -nodcaudio -nomsaa -16bpp  -high";
 		
-		private static string V2 = "-window -32bit +mat_disable_bloom 1 +func_break_max_pieces 0 +r_drawparticles 0 -nosync -nosrgb -console -noipx -nojoy +exec autoexec.cfg -nocrashdialog -high -d3d9ex -noforcemparms -noaafonts" +
-			" -noforcemaccel -limitvsconst +r_dynamic 0 -noforcemspd +fps_max 3 -nopreload -nopreloadmodels +cl_forcepreload 0 " +
-            "-nosound -novid -w 640 -h 480 -nomouse"; //меньше чеи 640х480 нельзя, иначе кску крашит
+		private static string V2 = "-window -32bit +mat_disable_bloom 1 +func_break_max_pieces 0 +r_drawparticles 0 -nosync -nosrgb -console -noipx -nojoy +exec autoexec.cfg -nocrashdialog -high -d3d9ex -noforcemparms -noaafonts " +
+            "-noforcemaccel -limitvsconst +r_dynamic 0 -noforcemspd +fps_max 4 -nopreload -nopreloadmodels +cl_forcepreload 0 " +
+            "-nosound -novid -w 640 -h 480 -nomouse "; //меньше чеи 640х480 нельзя, иначе кску крашит
 
 		private static string serverConnectionString = "";
 
@@ -399,7 +399,10 @@ namespace ConsoleApp1
             }
             await Task.Run(() => {
 				SetCsgoPos(csgoWindow, xOffsetMonitor, yOffsetMonitor, login);
-				Thread.Sleep(60000);
+				Thread.Sleep(1000*120);
+
+                SetWindowText(csgoWindow, $"csgo_{login}"); //не перемещаются неименованые окна, поэтому пробую поменять
+				Thread.Sleep(1000);
                 SetCsgoPos(csgoWindow, xOffsetMonitor, yOffsetMonitor, login);
             });
 		}
@@ -791,8 +794,9 @@ namespace ConsoleApp1
 
 					processStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 					processStartInfo.FileName = "cmd.exe";
-					//-no-browser после 730
-					processStartInfo.Arguments = string.Format("/C \"{0}\" -noreactlogin -login {1} {2} -applaunch 730 -no-browser -language {3} {4} -x {5} -y {6} {7} {8}", new object[]
+                    //-no-browser после 730
+                    //+{9}
+                    processStartInfo.Arguments = string.Format("/C \"{0}\" -noreactlogin -login {1} {2} -applaunch 730 -no-browser -language {3} {4} -x {5} -y {6} {7} {8} +{9}", new object[]
                     {
                        @"C:\Program Files (x86)\Steam\steam.exe",
                        login,
@@ -802,7 +806,8 @@ namespace ConsoleApp1
                        xSize * windowInARow,
                        Program.yOffset,
                        Program.parsnew,
-                       Program.def
+                       Program.def,
+					   serverConnectionString
                     });
 
                     process.StartInfo = processStartInfo;
@@ -1068,7 +1073,7 @@ namespace ConsoleApp1
 
 					bool timeIsOver = false;
 					System.Timers.Timer tmr2 = new System.Timers.Timer();
-                    tmr2.Interval = 1000*160; //для 24 версии 220 сек
+                    tmr2.Interval = 1000*160; 
                     tmr2.Elapsed += (o, e) => CheckTime(ref timeIsOver, tmr2);
 					tmr2.Enabled = true;
 					int xOffSave = xOffset;
@@ -1124,7 +1129,7 @@ namespace ConsoleApp1
                             //myThread7 = new Thread(delegate () { SetWindowText(csgoWindow, $"csgo_{login}"); });
                             //myThread7.Start();
 
-                            //Thread.Sleep(5000); //без этого делея бывает редко окна друг на друга ставятся                           
+                            Thread.Sleep(10000); //без этого делея бывает редко окна друг на друга ставятся                           
                             SetWindowText(csgoWindow, $"csgo_{login}");
 							Thread.Sleep(3000);
                             SetCsgoPosAsync(csgoWindow, xOffset, yOffset,login);
@@ -1267,7 +1272,7 @@ namespace ConsoleApp1
 
 		static void Main(string[] args)
 		{
-			Console.Title = "CSGO_IDLE_MACHINE";
+            Console.Title = "CSGO_IDLE_MACHINE";
 			Thread.Sleep(100);
 			IntPtr conWindow = FindWindow(null, "CSGO_IDLE_MACHINE");			
 			SetWindowPos(conWindow, IntPtr.Zero, monitorSizeX - consoleX, monitorSizeY - consoleY - 40, consoleX, consoleY, SWP_NOZORDER); //вылазит за экран если размер элементов больше 100%			
