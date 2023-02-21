@@ -55,14 +55,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ConsoleApp1.exe" size="54240">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="ConsoleApp1.exe" size="52736">
       <assemblyIdentity name="ConsoleApp1" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>kPdNE5s8wGoEAbeiDoaEBgwNgL0fv98cBfUMyy4rl50=</dsig:DigestValue>
+        <dsig:DigestValue>WrT1B6dB13ptLZFBHQBsF9HjKqhra6mk6bDvzIJHPts=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -170,7 +170,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>OIY83DroHmadkVRauqavxEq8Aouzqkh1p/lxFo6AEsI=</dsig:DigestValue>
+        <dsig:DigestValue>Mzdcc/OV3EJEOqsJ0ad0RCysDaydnArUeUVVgu4DYqs=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

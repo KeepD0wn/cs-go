@@ -155,7 +155,9 @@ namespace ConsoleApp1
 
 		const int VK_ENTER = 0x0D;
 
-		const int WM_KEYDOWN = 0x100;
+        const int VK_BACK = 0x08;
+
+        const int WM_KEYDOWN = 0x100;
 
 		const int wmChar = 0x0102;
 
@@ -193,7 +195,7 @@ namespace ConsoleApp1
 
 		private static List<Process> listSteam = new List<Process>();
 
-		private static int timeIdle = 12600000; //210 минут 12600000; 1230 минут (20.5 часа) 73800000
+		private static int timeIdle = 73800000; //210 минут 12600000; 1230 минут (20.5 часа) 73800000
 
 		private static int consoleX = 380;
 		
@@ -463,7 +465,7 @@ namespace ConsoleApp1
 		private static async Task TypeInCsgoAsync(Process steamProc, Process csgoProc, string login, int accid, IntPtr console, int xOff,int yOff)
 		{
 			await Task.Delay(150000);
-			Task t = Task.Run(() => TypeInCsgo(steamProc, login, accid, console, xOff, yOff));
+			//Task t = Task.Run(() => TypeInCsgo(steamProc, login, accid, console, xOff, yOff));
             System.Timers.Timer timer = new System.Timers.Timer(timeIdle);
 			timer.Elapsed += (o, e) => KillCsSteam(steamProc, csgoProc, accid, login);
             timer.AutoReset = false;
@@ -628,19 +630,19 @@ namespace ConsoleApp1
 		private static void TypeText(IntPtr console, IntPtr targer, string str)
 		{
 			LangToEn();
-			Thread.Sleep(500); //когда проц загружен нужен делей
-			SetForegroundWindow(console);
-			Thread.Sleep(100);
+			//Thread.Sleep(500); //когда проц загружен нужен делей
+			//SetForegroundWindow(console);
+			//Thread.Sleep(100);
 			SetForegroundWindow(targer);
 			Thread.Sleep(1000);
 			foreach (char ch in str)
 			{
 				PostMessage(targer, wmChar, ch, 0);
-				Thread.Sleep(100);
+				Thread.Sleep(200);
 			}
 			Thread.Sleep(500);
-			PostMessage(targer, WM_KEYDOWN, VK_ENTER, 1);
-			Thread.Sleep(100);
+			//PostMessage(targer, WM_KEYDOWN, VK_ENTER, 1);
+			//Thread.Sleep(100);
 			SetForegroundWindow(console);
 		}
 
@@ -795,13 +797,13 @@ namespace ConsoleApp1
 					processStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 					processStartInfo.FileName = "cmd.exe";
                     //-no-browser после 730
-                    //+{9}
-                    processStartInfo.Arguments = string.Format("/C \"{0}\" -noreactlogin -login {1} {2} -applaunch 730 -no-browser -language {3} {4} -x {5} -y {6} {7} {8} +{9}", new object[]
+                    //+{8}
+                    //-noreactlogin
+                    processStartInfo.Arguments = string.Format("/C \"{0}\" -noverifyfiles -noreactlogin -login {1} {2} -applaunch 730 -no-browser {3} -x {4} -y {5} {6} {7} +{8}", new object[]
                     {
                        @"C:\Program Files (x86)\Steam\steam.exe",
                        login,
                        password,
-                       accid,
                        Program.V2,
                        xSize * windowInARow,
                        Program.yOffset,
@@ -812,10 +814,11 @@ namespace ConsoleApp1
 
                     process.StartInfo = processStartInfo;
 					process.Start();
+                    var codeGuardTask = GetGuardCodeAsync(secretKey);
 
-					IntPtr steamWindowLogin = new IntPtr();
+                    IntPtr steamWindowLogin = new IntPtr();
 					IntPtr csgoWindow = new IntPtr();
-					IntPtr steamGuardWindow = new IntPtr();
+					//IntPtr steamGuardWindow = new IntPtr();
 					IntPtr console = FindWindow(null, "CSGO_IDLE_MACHINE");
 
 					bool timeIsOverSteam = false;
@@ -830,21 +833,6 @@ namespace ConsoleApp1
 
 					while (true)
 					{
-						steamWindowLogin = FindWindow(null, "Вход в Steam");
-						if (steamWindowLogin.ToString() != "0" && !listSteamLogin.Contains(steamWindowLogin.ToString())) //ищем стим, которого не было
-						{
-							LogAndConsoleWritelineAsync("[SYSTEM] Steam detected");
-
-							//listSteamLogin.Add(steamWindow.ToString());
-
-							Thread.Sleep(500);
-							GetWindowThreadProcessId(steamWindowLogin, ref steamProcId);
-							steamProc = Process.GetProcessById(steamProcId);
-							//listSteam.Add(steamProc);
-							SetWindowText(steamProc.MainWindowHandle, $"steam_{login}");
-							break;
-						}
-
 						steamWindowLogin = FindWindow(null, "Steam Sign In");
 						if (steamWindowLogin.ToString() != "0" && !listSteamLogin.Contains(steamWindowLogin.ToString()))
 						{
@@ -856,8 +844,11 @@ namespace ConsoleApp1
 							GetWindowThreadProcessId(steamWindowLogin, ref steamProcId);
 							steamProc = Process.GetProcessById(steamProcId);
 							//listSteam.Add(steamProc);
-							SetWindowText(steamProc.MainWindowHandle, $"steam_{login}");
-							break;
+							//SetWindowText(steamProc.MainWindowHandle, $"steam_{login}");
+
+							//Thread.Sleep(2000);
+                            //SetWindowText(steamProc.MainWindowHandle, $"steam_{login}");
+                            break;
 						}
                         else
                         {
@@ -887,32 +878,7 @@ namespace ConsoleApp1
 						}
 
 						Thread.Sleep(100);
-					}					
-
-					bool guardDetected1 = false;
-					var codeGuardTask = GetGuardCodeAsync(secretKey);
-					DateTime now1 = DateTime.Now;
-					while (now1.AddSeconds(25) > DateTime.Now)
-					{
-						steamGuardWindow = FindWindow(null, "Steam Guard - Computer Authorization Required");
-						if (steamGuardWindow.ToString() != "0")
-						{
-							LogAndConsoleWritelineAsync("[SYSTEM] Steam Guard detected");
-							guardDetected1 = true;
-							break;
-						}
-
-						steamGuardWindow = FindWindow(null, "Steam Guard — Необходима авторизация компьютера");
-						if (steamGuardWindow.ToString() != "0")
-						{
-							LogAndConsoleWritelineAsync("[SYSTEM] Steam Guard detected");
-							guardDetected1 = true;
-							break;
-						}
-
-						Thread.Sleep(100);
 					}
-
 
 					try
 					{
@@ -922,31 +888,113 @@ namespace ConsoleApp1
 
 					codeGuardTask.Wait();
 					LogAndConsoleWritelineAsync($"Guard code: {codeGuardTask.Result}");
-					if (guardDetected1 == true && steamGuardWindow.ToString() != "0")
-					{
-						Thread.Sleep(3000); //с 1 секунды до 3 сек что бы на высоких кол-вах не захлёбывался
-						lock (threadLockType)
-						{
-							TypeText(console, steamGuardWindow, codeGuardTask.Result);
-						}
-					}
-					else
-					{
-						//try
-						//{
-						//	listSteamLogin.Remove(steamProc.MainWindowHandle.ToString());
-						//}
-						//catch { }
 
+
+					bool guardWasDetected = false;
+					DateTime now1 = DateTime.Now;
+					//именно столько секунд даёт на прогрузку после гварда или когда ошибка expired. Из минусов столько ждать если неправильный пароль 
+					while (now1.AddSeconds(90) > DateTime.Now)
+					{
+						if (FindWindow(null, $"Steam Sign In").ToString() != "0") //FindWindow(null, $"steam_{login}").ToString() != "0"
+                        {
+                            guardWasDetected = true;
+                            lock (threadLockType)
+							{
+								SetForegroundWindow(steamWindowLogin);
+								Thread.Sleep(1000);
+								PostMessage(steamWindowLogin, WM_KEYDOWN, VK_BACK, 1);
+								Thread.Sleep(200);
+								PostMessage(steamWindowLogin, WM_KEYDOWN, VK_BACK, 1);
+								Thread.Sleep(200);
+								PostMessage(steamWindowLogin, WM_KEYDOWN, VK_BACK, 1);
+								Thread.Sleep(200);
+								PostMessage(steamWindowLogin, WM_KEYDOWN, VK_BACK, 1);
+								Thread.Sleep(200);
+								PostMessage(steamWindowLogin, WM_KEYDOWN, VK_BACK, 1);
+								Thread.Sleep(200);
+								TypeText(console, steamWindowLogin, codeGuardTask.Result);
+							}							
+						}
+                        //если окно стим гварда(логина) было найдено и сейчас уже закрылось. Бывает ошибка и долго висит, пока не появится стим табличка с началом запуска кс
+						// так что надо ждать пока появится это окно, что бы ошибка закрылось и код пошёл дальше
+                        if (FindWindow(null, $"Steam Sign In").ToString() == "0" && guardWasDetected ==true) //FindWindow(null, $"steam_{login}").ToString()
+                        {
+                            
+                            LogAndConsoleWritelineAsync("[SYSTEM] Guard was successfully completed");
+                            Thread.Sleep(3000);							
+                            break;
+                        }
+
+                        Thread.Sleep(1000);
+					}
+
+
+					//ну тут понятно если не было найдено стима переименованное
+					if (guardWasDetected == false)
+					{
 						steamProc.Kill(); // если процесс подвисает на время загрузки гварда, никак не убить
 										  //listSteam.Remove(steamProc);
-						LogAndConsoleWritelineAsync("[SYSTEM] No steam Guard detected №2");
+						LogAndConsoleWritelineAsync("[SYSTEM] Cant find Guard window");
 						exceptionsInARow += 1;
 						Thread.Sleep(1000);
 						throw new Exception("Abort");
 					}
-				
-					var ts = new CancellationTokenSource(); //отменяемый таск
+
+					// тут если гвард был раньше найден, потом закрылся (условия прохождения while выше). А сейчас опять открыт
+                    if (guardWasDetected == true && FindWindow(null, $"Steam Sign In").ToString() != "0")
+                    {
+                        steamProc.Kill(); // если процесс подвисает на время загрузки гварда, никак не убить
+                                          //listSteam.Remove(steamProc);
+                        LogAndConsoleWritelineAsync("[SYSTEM] Cant skip Guard window");
+                        exceptionsInARow += 1;
+                        Thread.Sleep(1000);
+                        throw new Exception("Abort");
+                    }
+
+                    // Thread.Sleep(3000); //с 1 секунды до 3 сек что бы на высоких кол-вах не захлёбывался
+                    //lock (threadLockType)
+                    //{
+                    //	TypeText(console, steamWindowLogin, codeGuardTask.Result);
+                    //}
+                    //                  Thread.Sleep(5000); //с 1 секунды до 3 сек что бы на высоких кол-вах не захлёбывался
+                    //                  if (FindWindow(null, $"steam_{login}").ToString() != "0")
+                    //{
+                    //	LogAndConsoleWritelineAsync("Try enter guard code #2");
+                    //                      lock (threadLockType)
+                    //                      {
+                    //                          SetForegroundWindow(steamWindowLogin);
+                    //                          Thread.Sleep(1000);
+                    //                          PostMessage(steamWindowLogin, WM_KEYDOWN, VK_BACK, 1);
+                    //		Thread.Sleep(200);
+                    //                          PostMessage(steamWindowLogin, WM_KEYDOWN, VK_BACK, 1);
+                    //                          Thread.Sleep(200);
+                    //                          PostMessage(steamWindowLogin, WM_KEYDOWN, VK_BACK, 1);
+                    //                          Thread.Sleep(200);
+                    //                          PostMessage(steamWindowLogin, WM_KEYDOWN, VK_BACK, 1);
+                    //                          Thread.Sleep(200);
+                    //                          PostMessage(steamWindowLogin, WM_KEYDOWN, VK_BACK, 1);
+                    //                          Thread.Sleep(200);
+                    //                          TypeText(console, steamWindowLogin, codeGuardTask.Result);
+                    //                      }
+                    //                  }                           
+                    //               }
+                    //else
+                    //{
+                    //	//try
+                    //	//{
+                    //	//	listSteamLogin.Remove(steamProc.MainWindowHandle.ToString());
+                    //	//}
+                    //	//catch { }
+
+                    //	steamProc.Kill(); // если процесс подвисает на время загрузки гварда, никак не убить
+                    //					  //listSteam.Remove(steamProc);
+                    //	LogAndConsoleWritelineAsync("[SYSTEM] No steam Guard detected №2");
+                    //	exceptionsInARow += 1;
+                    //	Thread.Sleep(1000);
+                    //	throw new Exception("Abort");
+                    //}
+
+                    var ts = new CancellationTokenSource(); //отменяемый таск
 					CancellationToken ct = ts.Token;
 					Task.Factory.StartNew(() =>
 					{
@@ -1030,30 +1078,6 @@ namespace ConsoleApp1
                                         }
                                     }
 								
-
-									//IntPtr toggle = FindWindow(null, "Toggle");
-									//if (toggle.ToString() == "0")
-									//{
-									//	Process processTog = new Process();
-									//	ProcessStartInfo processStartInfoTog = new ProcessStartInfo();
-
-									//	processStartInfoTog.WindowStyle = ProcessWindowStyle.Minimized;
-									//	processStartInfoTog.FileName = "cmd.exe";
-									//	processStartInfo.UseShellExecute = true;
-									//	processStartInfoTog.Arguments = string.Format("/C \"{0}\" {1}", new object[]
-									//	{
-									//	$@"{AppDomain.CurrentDomain.BaseDirectory}\Toggle.exe",
-									//	lastCycle.ToString()
-									//	});
-
-									//	processTog.StartInfo = processStartInfoTog;
-									//	processTog.Start();
-									//	Environment.Exit(0);
-									//}
-									//else
-									//{
-									//	Console.ReadLine(); //ждём пока тогл всё решит за нас
-									//}
 								}
                                 else
                                 {
@@ -1069,11 +1093,11 @@ namespace ConsoleApp1
 						}
 					}, ct);					
 
-					CheckGuardClosed(steamGuardWindow, steamProc, console, accid, codeGuardTask.Result); //тут должно отрабатывать но вообще неочаа
+					//CheckGuardClosed(steamWindowLogin, steamProc, console, accid, codeGuardTask.Result); //тут должно отрабатывать но вообще неочаа
 
 					bool timeIsOver = false;
 					System.Timers.Timer tmr2 = new System.Timers.Timer();
-                    tmr2.Interval = 1000*160; 
+                    tmr2.Interval = 1000*180; 
                     tmr2.Elapsed += (o, e) => CheckTime(ref timeIsOver, tmr2);
 					tmr2.Enabled = true;
 					int xOffSave = xOffset;
@@ -1167,6 +1191,21 @@ namespace ConsoleApp1
 					processStarted += 1;
 					SetOnline(1, accid);
 					exceptionsInARow = 0;
+
+					IntPtr friends = FindWindow(null, "Friends List");
+                    if (friends.ToString() != "0")
+					{
+						int friendsId = 0;
+                        GetWindowThreadProcessId(friends, ref friendsId);
+                        Process friendsProc = Process.GetProcessById(friendsId);
+
+						try
+						{
+							friendsProc.Kill();
+                        }
+						catch { }
+                    }
+
 					TypeInCsgoAsync(steamProc, csgoProc, login, accid, console, xOffSave, yOffSave);
 				}
 			}
