@@ -195,7 +195,7 @@ namespace ConsoleApp1
 
 		private static List<Process> listSteam = new List<Process>();
 
-		private static int timeIdle = 73800000; //210 минут 12600000; 1230 минут (20.5 часа) 73800000
+		private static int timeIdle = 12600000; //210 минут 12600000; 1230 минут (20.5 часа) 73800000
 
 		private static int consoleX = 380;
 		
@@ -814,7 +814,7 @@ namespace ConsoleApp1
 
                     process.StartInfo = processStartInfo;
 					process.Start();
-                    var codeGuardTask = GetGuardCodeAsync(secretKey);
+                  //  var codeGuardTask = GetGuardCodeAsync(secretKey); 
 
                     IntPtr steamWindowLogin = new IntPtr();
 					IntPtr csgoWindow = new IntPtr();
@@ -886,14 +886,15 @@ namespace ConsoleApp1
 					}
 					catch { }
 
-					codeGuardTask.Wait();
-					LogAndConsoleWritelineAsync($"Guard code: {codeGuardTask.Result}");
+                    var codeGuardTask = GetGuardCodeAsync(secretKey); //было на 817 строке
+                    codeGuardTask.Wait();
+                    LogAndConsoleWritelineAsync($"Guard code: {codeGuardTask.Result}");
 
 
 					bool guardWasDetected = false;
 					DateTime now1 = DateTime.Now;
 					//именно столько секунд даёт на прогрузку после гварда или когда ошибка expired. Из минусов столько ждать если неправильный пароль 
-					while (now1.AddSeconds(90) > DateTime.Now)
+					while (now1.AddSeconds(150) > DateTime.Now)
 					{
 						if (FindWindow(null, $"Steam Sign In").ToString() != "0") //FindWindow(null, $"steam_{login}").ToString() != "0"
                         {
@@ -1149,12 +1150,12 @@ namespace ConsoleApp1
 							csgoProc = Process.GetProcessById(csProcId);
 							lastTimeCSStarted = DateTime.Now;
 
-                            //ждёт подгруза кски, занимает се кунд 10. Но если не ждать, то слишком быстро всё
-                            //myThread7 = new Thread(delegate () { SetWindowText(csgoWindow, $"csgo_{login}"); });
-                            //myThread7.Start();
+							//ждёт подгруза кски, занимает се кунд 10. Но если не ждать, то слишком быстро всё
+							myThread7 = new Thread(delegate () { SetWindowText(csgoWindow, $"csgo_{login}"); });
+							myThread7.Start();
 
-                            Thread.Sleep(10000); //без этого делея бывает редко окна друг на друга ставятся                           
-                            SetWindowText(csgoWindow, $"csgo_{login}");
+							Thread.Sleep(10000); //без этого делея бывает редко окна друг на друга ставятся                           
+                           // SetWindowText(csgoWindow, $"csgo_{login}");
 							Thread.Sleep(3000);
                             SetCsgoPosAsync(csgoWindow, xOffset, yOffset,login);
 							break;
