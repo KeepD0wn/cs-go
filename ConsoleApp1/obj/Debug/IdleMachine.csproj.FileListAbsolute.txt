@@ -1,8 +1,3 @@
-C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.exe.config
-C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.exe.manifest
-C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.application
-C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.exe
-C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.pdb
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\BouncyCastle.Crypto.dll
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\DocumentFormat.OpenXml.dll
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\FastMember.Signed.dll
@@ -37,13 +32,18 @@ C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\IdleMachine.csproj
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.Properties.Resources.resources
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\IdleMachine.csproj.GenerateResource.cache
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\IdleMachine.csproj.CoreCompileInputs.cache
-C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.TrustInfo.xml
-C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.exe.manifest
-C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.application
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\IdleMachine.csproj.CopyComplete
-C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.exe
-C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.pdb
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\ZstdNet.dll
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\BouncyCastle.Crypto.xml
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\IdleMachine.csproj.SuggestedBindingRedirects.cache
 C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\Newtonsoft.Json.xml
+C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\CSGO IDLE MACHINE.exe.config
+C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\CSGO IDLE MACHINE.exe.manifest
+C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\CSGO IDLE MACHINE.application
+C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\CSGO IDLE MACHINE.exe
+C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\CSGO IDLE MACHINE.pdb
+C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\CSGO IDLE MACHINE.TrustInfo.xml
+C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\CSGO IDLE MACHINE.exe.manifest
+C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\CSGO IDLE MACHINE.application
+C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\CSGO IDLE MACHINE.exe
+C:\Users\gvozd\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\CSGO IDLE MACHINE.pdb

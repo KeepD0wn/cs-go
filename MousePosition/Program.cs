@@ -9,7 +9,7 @@ namespace MousePosition
     {
         static void Main(string[] args)
         {
-            for (int i = 10; i > 0; i--)
+            for (int i = 5; i > 0; i--)
             {
                 Console.WriteLine($"Наведите курсок мыши на ярлык стима. Осталось {i} секунд");
                 Thread.Sleep(1000);

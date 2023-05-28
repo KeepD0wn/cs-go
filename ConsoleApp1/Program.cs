@@ -183,11 +183,13 @@ namespace ConsoleApp1
 
 		private static int yOffset = 0;
 
-		private static int xSize = 160; //всё равно ставит своё разрешение
+        private static double screenScalingFactor = GetWindowsScreenScalingFactor();
 
-		private static int ySize = 160; //всё равно ставит своё разрешение
+        private static int xSize = 160;
 
-		private static MySqlConnection conn = DBUtils.GetDBConnection();
+        private static int ySize = 160;
+
+        private static MySqlConnection conn = DBUtils.GetDBConnection();
 
 		private static int processStarted = 0;
 
@@ -195,19 +197,19 @@ namespace ConsoleApp1
 
 		private static List<Process> listSteam = new List<Process>();
 
-		private static int timeIdle = 12600000; //210 минут 12600000; 1230 минут (20.5 часа) 73800000
+		private static int timeIdle = 12720000; //212 минут 12 720 000; 1230 минут (20.5 часа) 73800000
 
-		private static int consoleX = 380;
-		
-		private static int consoleY = 270;
+        private static int consoleX = 380;		
+
+        private static int consoleY = 270;
 
 		private static int currentCycle = 0;
 
 		private static IntPtr primary = GetDC(IntPtr.Zero);
 
-		private static int monitorSizeX = GetDeviceCaps(primary, DESKTOPHORZRES);
+		private static int monitorSizeX = Convert.ToInt32(GetDeviceCaps(primary, DESKTOPHORZRES) / screenScalingFactor);
 
-		private static int monitorSizeY = GetDeviceCaps(primary, DESKTOPVERTRES);
+		private static int monitorSizeY = Convert.ToInt32(GetDeviceCaps(primary, DESKTOPVERTRES) / screenScalingFactor);
 
 		private static int maxWindowInARow = monitorSizeX / xSize;
 
@@ -950,50 +952,7 @@ namespace ConsoleApp1
                         exceptionsInARow += 1;
                         Thread.Sleep(1000);
                         throw new Exception("Abort");
-                    }
-
-                    // Thread.Sleep(3000); //с 1 секунды до 3 сек что бы на высоких кол-вах не захлёбывался
-                    //lock (threadLockType)
-                    //{
-                    //	TypeText(console, steamWindowLogin, codeGuardTask.Result);
-                    //}
-                    //                  Thread.Sleep(5000); //с 1 секунды до 3 сек что бы на высоких кол-вах не захлёбывался
-                    //                  if (FindWindow(null, $"steam_{login}").ToString() != "0")
-                    //{
-                    //	LogAndConsoleWritelineAsync("Try enter guard code #2");
-                    //                      lock (threadLockType)
-                    //                      {
-                    //                          SetForegroundWindow(steamWindowLogin);
-                    //                          Thread.Sleep(1000);
-                    //                          PostMessage(steamWindowLogin, WM_KEYDOWN, VK_BACK, 1);
-                    //		Thread.Sleep(200);
-                    //                          PostMessage(steamWindowLogin, WM_KEYDOWN, VK_BACK, 1);
-                    //                          Thread.Sleep(200);
-                    //                          PostMessage(steamWindowLogin, WM_KEYDOWN, VK_BACK, 1);
-                    //                          Thread.Sleep(200);
-                    //                          PostMessage(steamWindowLogin, WM_KEYDOWN, VK_BACK, 1);
-                    //                          Thread.Sleep(200);
-                    //                          PostMessage(steamWindowLogin, WM_KEYDOWN, VK_BACK, 1);
-                    //                          Thread.Sleep(200);
-                    //                          TypeText(console, steamWindowLogin, codeGuardTask.Result);
-                    //                      }
-                    //                  }                           
-                    //               }
-                    //else
-                    //{
-                    //	//try
-                    //	//{
-                    //	//	listSteamLogin.Remove(steamProc.MainWindowHandle.ToString());
-                    //	//}
-                    //	//catch { }
-
-                    //	steamProc.Kill(); // если процесс подвисает на время загрузки гварда, никак не убить
-                    //					  //listSteam.Remove(steamProc);
-                    //	LogAndConsoleWritelineAsync("[SYSTEM] No steam Guard detected №2");
-                    //	exceptionsInARow += 1;
-                    //	Thread.Sleep(1000);
-                    //	throw new Exception("Abort");
-                    //}
+                    }                    
 
                     var ts = new CancellationTokenSource(); //отменяемый таск
 					CancellationToken ct = ts.Token;
@@ -1247,7 +1206,36 @@ namespace ConsoleApp1
             }			
 		}
 
-		private static void CheckSubscribe(string key)
+        public enum DeviceCap
+        {
+            VERTRES = 10,
+            DESKTOPVERTRES = 117
+        }
+
+        static double GetWindowsScreenScalingFactor(bool percentage = true)
+        {
+            //Create Graphics object from the current windows handle
+            Graphics GraphicsObject = Graphics.FromHwnd(IntPtr.Zero);
+            //Get Handle to the device context associated with this Graphics object
+            IntPtr DeviceContextHandle = GraphicsObject.GetHdc();
+            //Call GetDeviceCaps with the Handle to retrieve the Screen Height
+            int LogicalScreenHeight = GetDeviceCaps(DeviceContextHandle, (int)DeviceCap.VERTRES);
+            int PhysicalScreenHeight = GetDeviceCaps(DeviceContextHandle, (int)DeviceCap.DESKTOPVERTRES);
+            //Divide the Screen Heights to get the scaling factor and round it to two decimals
+            double ScreenScalingFactor = Math.Round((double)PhysicalScreenHeight / (double)LogicalScreenHeight, 2);
+            //If requested as percentage - convert it
+            if (percentage)
+            {
+                ScreenScalingFactor *= 100.0;
+            }
+            //Release the Handle and Dispose of the GraphicsObject object
+            GraphicsObject.ReleaseHdc(DeviceContextHandle);
+            GraphicsObject.Dispose();
+            //Return the Scaling Factor
+            return ScreenScalingFactor / 100;
+        }
+
+        private static void CheckSubscribe(string key)
         {
 			MySqlConnection conn = new MySqlConnection();
 			try
@@ -1255,7 +1243,7 @@ namespace ConsoleApp1
 				conn = new MySqlConnection(Properties.Resources.String1);
 				conn.Open();
 
-				var com = new MySqlCommand("USE `MySQL-5846`; " +
+				var com = new MySqlCommand("USE subs; " +
 				 "select * from `subs` where keyLic = @keyLic AND subEnd > NOW() AND activeLic = 1 limit 1", conn);
 				com.Parameters.AddWithValue("@keyLic", key);
 
@@ -1263,7 +1251,10 @@ namespace ConsoleApp1
 				{
 					if (reader.HasRows) //тут уходит на else если нет данных
 					{
-
+						reader.Read();
+						string dataEnd = reader.GetString(2);
+						Console.WriteLine($"Subscription will end {dataEnd}");
+						reader.Close();
 					}
 					else
 					{
@@ -1314,12 +1305,12 @@ namespace ConsoleApp1
 		{
             Console.Title = "CSGO_IDLE_MACHINE";
 			Thread.Sleep(100);
-			IntPtr conWindow = FindWindow(null, "CSGO_IDLE_MACHINE");			
+            IntPtr conWindow = FindWindow(null, "CSGO_IDLE_MACHINE");			
 			SetWindowPos(conWindow, IntPtr.Zero, monitorSizeX - consoleX, monitorSizeY - consoleY - 40, consoleX, consoleY, SWP_NOZORDER); //вылазит за экран если размер элементов больше 100%			
 			SetForegroundWindow(conWindow);
 
 			Console.ForegroundColor = ConsoleColor.Red;
-			LogAndConsoleWritelineAsync("IDLE MACHINE v1.9.1");
+			LogAndConsoleWritelineAsync("IDLE MACHINE v2.0");
 			LogAndConsoleWritelineAsync("discord.gg/nRrrpqhRtg");
 			Console.ResetColor();
 
@@ -1332,22 +1323,22 @@ namespace ConsoleApp1
 			}
 					
 
-            if (true) //(File.Exists($@"{AppDomain.CurrentDomain.BaseDirectory}\License.lic")
-			{
-                //string key = "";
-                //using (StreamReader sr = new StreamReader($@"{AppDomain.CurrentDomain.BaseDirectory}\License.lic"))
-                //{
-                //    key = sr.ReadToEnd();
-                //}
-                //key = key.Replace("\r\n", "");
-
-				//CheckSubscribe(key);
-
-				if (true) //PcInfo.GetCurrentPCInfo() == key
+            if (File.Exists($@"{AppDomain.CurrentDomain.BaseDirectory}\License.lic")) //File.Exists($@"{AppDomain.CurrentDomain.BaseDirectory}\License.lic")
+            {
+				string key = "";
+				using (StreamReader sr = new StreamReader($@"{AppDomain.CurrentDomain.BaseDirectory}\License.lic"))
 				{
-					LogAndConsoleWritelineAsync("[SYSTEM] License confirmed");
+					key = sr.ReadToEnd();
+				}
+				key = key.Replace("\r\n", "");
 
-					SetOnlineZero(); 
+				if (PcInfo.GetCurrentPCInfo() == key) //PcInfo.GetCurrentPCInfo() == key
+				{
+                    CheckSubscribe(key);
+
+                    LogAndConsoleWritelineAsync("[SYSTEM] License confirmed");
+
+                    SetOnlineZero(); 
 					if (File.Exists($@"{AppDomain.CurrentDomain.BaseDirectory}\connection.txt"))
 					{
 						 string connStr = "1";

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30804.86
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdleMachine", "ConsoleApp1\IdleMachine.csproj", "{2BA1701C-F775-4188-AE0D-53D7D48C8C39}"
 EndProject
@@ -16,6 +16,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Toggle", "Toggle\Toggle.csproj", "{E785B6CE-2F54-42EB-891A-D478528F1D14}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreateWindowNamed", "CreateWindowNamed\CreateWindowNamed.csproj", "{444B72D7-539E-40D5-B6DA-7D0EECEF5E42}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateFolders", "CreateFolders\CreateFolders.csproj", "{FF10B1B8-42AA-4EF7-8229-428499C3E954}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5AD0934E-F6C4-4AE5-83AF-C788313B2A87} = {5AD0934E-F6C4-4AE5-83AF-C788313B2A87}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +56,10 @@ Global
 		{444B72D7-539E-40D5-B6DA-7D0EECEF5E42}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{444B72D7-539E-40D5-B6DA-7D0EECEF5E42}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{444B72D7-539E-40D5-B6DA-7D0EECEF5E42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF10B1B8-42AA-4EF7-8229-428499C3E954}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF10B1B8-42AA-4EF7-8229-428499C3E954}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF10B1B8-42AA-4EF7-8229-428499C3E954}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF10B1B8-42AA-4EF7-8229-428499C3E954}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
