@@ -55,14 +55,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CSGO IDLE MACHINE.exe" size="302560">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CSGO IDLE MACHINE.exe" size="302048">
       <assemblyIdentity name="CSGO IDLE MACHINE" version="1.0.0.0" publicKeyToken="1C83E84A3B77B179" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>KEUpZnxfXqs+KuGDII+7yjr279brdcWBcoz7lRHkjRo=</dsig:DigestValue>
+        <dsig:DigestValue>bIxUkQG6fh4ll2OqhCwNWT9gRIKZ1geVfhU7i/tfCt4=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -170,7 +170,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>LYVS3ipbiNUw0FeiUtPJmoC/ITqk3GTl0vZrWzE7qrU=</dsig:DigestValue>
+        <dsig:DigestValue>K9JM46QG4WL0Kidx2TjFfdRUUlTdDfea2kIt7i5a5so=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
