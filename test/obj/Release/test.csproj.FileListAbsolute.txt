@@ -1,0 +1,8 @@
+C:\Users\gvozd\source\repos\ConsoleApp1\test\bin\Release\test.exe.config
+C:\Users\gvozd\source\repos\ConsoleApp1\test\bin\Release\test.exe
+C:\Users\gvozd\source\repos\ConsoleApp1\test\bin\Release\test.pdb
+C:\Users\gvozd\source\repos\ConsoleApp1\test\obj\Release\test.csproj.AssemblyReference.cache
+C:\Users\gvozd\source\repos\ConsoleApp1\test\obj\Release\test.csproj.SuggestedBindingRedirects.cache
+C:\Users\gvozd\source\repos\ConsoleApp1\test\obj\Release\test.csproj.CoreCompileInputs.cache
+C:\Users\gvozd\source\repos\ConsoleApp1\test\obj\Release\test.exe
+C:\Users\gvozd\source\repos\ConsoleApp1\test\obj\Release\test.pdb

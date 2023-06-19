@@ -11,7 +11,6 @@ using System.Data.Common;
 using System.Threading.Tasks;
 using System.IO;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Drawing;
 using System.Drawing.Imaging;
 
@@ -1303,6 +1302,7 @@ namespace ConsoleApp1
 
 		static void Main(string[] args)
 		{
+			
             Console.Title = "CSGO_IDLE_MACHINE";
 			Thread.Sleep(100);
             IntPtr conWindow = FindWindow(null, "CSGO_IDLE_MACHINE");			
@@ -1310,7 +1310,6 @@ namespace ConsoleApp1
 			SetForegroundWindow(conWindow);
 
 			Console.ForegroundColor = ConsoleColor.Red;
-			LogAndConsoleWritelineAsync("IDLE MACHINE v2.0");
             LogAndConsoleWritelineAsync("НАШ СЕРВЕР DISCORD");
             LogAndConsoleWritelineAsync("discord.gg/nRrrpqhRtg");
 			Console.ResetColor();

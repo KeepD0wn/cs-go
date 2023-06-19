@@ -1,0 +1,15 @@
+C:\Users\gvozd\source\repos\ConsoleApp1\test\bin\Debug\test.exe.config
+C:\Users\gvozd\source\repos\ConsoleApp1\test\bin\Debug\test.exe
+C:\Users\gvozd\source\repos\ConsoleApp1\test\bin\Debug\test.pdb
+C:\Users\gvozd\source\repos\ConsoleApp1\test\obj\Debug\test.csproj.AssemblyReference.cache
+C:\Users\gvozd\source\repos\ConsoleApp1\test\obj\Debug\test.csproj.SuggestedBindingRedirects.cache
+C:\Users\gvozd\source\repos\ConsoleApp1\test\obj\Debug\test.csproj.CoreCompileInputs.cache
+C:\Users\gvozd\source\repos\ConsoleApp1\test\obj\Debug\test.exe
+C:\Users\gvozd\source\repos\ConsoleApp1\test\obj\Debug\test.pdb
+C:\Users\gvozd\source\repos\ConsoleApp1\test\bin\Debug\WindowsInput.dll
+C:\Users\gvozd\source\repos\ConsoleApp1\test\obj\Debug\test.csproj.CopyComplete
+C:\Users\gvozd\source\repos\ConsoleApp1\test\bin\Debug\SharpDX.dll
+C:\Users\gvozd\source\repos\ConsoleApp1\test\bin\Debug\SharpDX.pdb
+C:\Users\gvozd\source\repos\ConsoleApp1\test\bin\Debug\Gma.System.MouseKeyHook.dll
+C:\Users\gvozd\source\repos\ConsoleApp1\test\bin\Debug\WinHook.dll
+C:\Users\gvozd\source\repos\ConsoleApp1\test\bin\Debug\WinHook.xml

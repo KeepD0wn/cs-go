@@ -1,6 +1,8 @@
-C:\Users\gvozd\source\repos\ConsoleApp1\MousePosition\bin\Debug\MousePosition.exe.config
-C:\Users\gvozd\source\repos\ConsoleApp1\MousePosition\bin\Debug\MousePosition.exe
-C:\Users\gvozd\source\repos\ConsoleApp1\MousePosition\bin\Debug\MousePosition.pdb
 C:\Users\gvozd\source\repos\ConsoleApp1\MousePosition\obj\Debug\MousePosition.csproj.CoreCompileInputs.cache
-C:\Users\gvozd\source\repos\ConsoleApp1\MousePosition\obj\Debug\MousePosition.exe
-C:\Users\gvozd\source\repos\ConsoleApp1\MousePosition\obj\Debug\MousePosition.pdb
+C:\Users\gvozd\source\repos\ConsoleApp1\MousePosition\bin\Debug\Mouse Position.exe.config
+C:\Users\gvozd\source\repos\ConsoleApp1\MousePosition\bin\Debug\Mouse Position.exe
+C:\Users\gvozd\source\repos\ConsoleApp1\MousePosition\bin\Debug\Mouse Position.pdb
+C:\Users\gvozd\source\repos\ConsoleApp1\MousePosition\obj\Debug\MousePosition.csproj.AssemblyReference.cache
+C:\Users\gvozd\source\repos\ConsoleApp1\MousePosition\obj\Debug\MousePosition.csproj.SuggestedBindingRedirects.cache
+C:\Users\gvozd\source\repos\ConsoleApp1\MousePosition\obj\Debug\Mouse Position.exe
+C:\Users\gvozd\source\repos\ConsoleApp1\MousePosition\obj\Debug\Mouse Position.pdb

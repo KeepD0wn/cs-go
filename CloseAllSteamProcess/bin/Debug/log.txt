@@ -1,0 +1,10 @@
+[015][Close All Steam Process] License not found 08.06.2023 19:37:09
+[011] Database not responding 08.06.2023 20:45:42
+[011] Database not responding 08.06.2023 21:02:01
+[011] Database not responding 08.06.2023 21:06:05
+[Close All Steam Process] Не удалось загрузить файл или сборку "MySql.Data, Version=8.0.33.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d" либо одну из их зависимостей. Не удается найти указанный файл. 08.06.2023 21:27:35
+[Close All Steam Process] Не удалось загрузить файл или сборку "MySql.Data, Version=8.0.33.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d" либо одну из их зависимостей. Не удается найти указанный файл. 08.06.2023 21:27:43
+Subscription will end 08.06.2024 14:29:31 08.06.2023 21:28:44
+Processes closed 1 08.06.2023 21:28:44
+Subscription will end 08.06.2024 14:29:31 08.06.2023 21:29:19
+Processes closed 0 08.06.2023 21:29:19
